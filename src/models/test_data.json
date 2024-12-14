@@ -1,0 +1,453 @@
+[
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "006c6219-5e32-4770-8a3d-03eddbcf18a7",
+    "executionStart": 1733491171479,
+    "executationEnd": 1733491179871,
+    "promptNumber": 4,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_rmfag_00004_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00004_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00004_",
+          "image": "ComfyUI_temp_rmfag_00004_.jpg",
+          "small": "ComfyUI_temp_rmfag_00004_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00004_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_rmfag_00005_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00005_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00005_",
+          "image": "ComfyUI_temp_rmfag_00005_.jpg",
+          "small": "ComfyUI_temp_rmfag_00005_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00005_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_rmfag_00006_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00006_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00006_",
+          "image": "ComfyUI_temp_rmfag_00006_.jpg",
+          "small": "ComfyUI_temp_rmfag_00006_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00006_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": [
+        {
+          "name": "OldAnimeStyle_XL_v3.safetensors",
+          "weight": 1
+        }
+      ]
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 123,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 456,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "23c8f3fa-4c7e-4b51-a73a-2b4402ef7c97",
+    "executionStart": 1732846463252,
+    "executationEnd": 1732846491722,
+    "promptNumber": 1,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_qgpvl_00001_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00001_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00001_",
+          "image": "ComfyUI_temp_qgpvl_00001_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00001_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00001_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00002_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00002_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00002_",
+          "image": "ComfyUI_temp_qgpvl_00002_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00002_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00002_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00003_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00003_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00003_",
+          "image": "ComfyUI_temp_qgpvl_00003_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00003_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00003_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": []
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 10242161060964740000,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 6199600664509873000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "39279501-b20e-4982-85b6-771a32c8ffd3",
+    "executionStart": 1733490826866,
+    "executationEnd": 1733490857705,
+    "promptNumber": 3,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_rmfag_00001_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00001_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00001_",
+          "image": "ComfyUI_temp_rmfag_00001_.jpg",
+          "small": "ComfyUI_temp_rmfag_00001_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00001_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_rmfag_00002_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00002_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00002_",
+          "image": "ComfyUI_temp_rmfag_00002_.jpg",
+          "small": "ComfyUI_temp_rmfag_00002_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00002_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_rmfag_00003_.png": {
+          "originalFilename": "ComfyUI_temp_rmfag_00003_.png",
+          "cleanName": "ComfyUI_temp_rmfag_00003_",
+          "image": "ComfyUI_temp_rmfag_00003_.jpg",
+          "small": "ComfyUI_temp_rmfag_00003_.small.jpg",
+          "thumb": "ComfyUI_temp_rmfag_00003_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": [
+        {
+          "name": "OldAnimeStyle_XL_v3.safetensors",
+          "weight": 1
+        }
+      ]
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 123,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 12453347128670132000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1024
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "3971a7f9-dd9a-4f5e-9957-a85b9cdb21a1",
+    "executionStart": 1732846491929,
+    "executationEnd": 1732846519393,
+    "promptNumber": 2,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_qgpvl_00004_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00004_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00004_",
+          "image": "ComfyUI_temp_qgpvl_00004_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00004_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00004_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00005_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00005_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00005_",
+          "image": "ComfyUI_temp_qgpvl_00005_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00005_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00005_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00006_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00006_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00006_",
+          "image": "ComfyUI_temp_qgpvl_00006_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00006_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00006_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": []
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 13832103460305631000,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 12755765011587967000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "4eb7cec3-24e1-4cd4-9432-c86f4ea30a8f",
+    "executionStart": 1732846519593,
+    "executationEnd": 1732846547113,
+    "promptNumber": 3,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_qgpvl_00007_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00007_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00007_",
+          "image": "ComfyUI_temp_qgpvl_00007_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00007_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00007_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00008_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00008_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00008_",
+          "image": "ComfyUI_temp_qgpvl_00008_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00008_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00008_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00009_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00009_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00009_",
+          "image": "ComfyUI_temp_qgpvl_00009_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00009_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00009_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": []
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 4336280782831521300,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 5333994301062610000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "890c6da8-0f53-4f6e-b02e-8315ea2a1270",
+    "executionStart": 1733447072491,
+    "executationEnd": 1733447109037,
+    "promptNumber": 0,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_xksty_00001_.png": {
+          "originalFilename": "ComfyUI_temp_xksty_00001_.png",
+          "cleanName": "ComfyUI_temp_xksty_00001_",
+          "image": "ComfyUI_temp_xksty_00001_.jpg",
+          "small": "ComfyUI_temp_xksty_00001_.small.jpg",
+          "thumb": "ComfyUI_temp_xksty_00001_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_xksty_00002_.png": {
+          "originalFilename": "ComfyUI_temp_xksty_00002_.png",
+          "cleanName": "ComfyUI_temp_xksty_00002_",
+          "image": "ComfyUI_temp_xksty_00002_.jpg",
+          "small": "ComfyUI_temp_xksty_00002_.small.jpg",
+          "thumb": "ComfyUI_temp_xksty_00002_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_xksty_00003_.png": {
+          "originalFilename": "ComfyUI_temp_xksty_00003_.png",
+          "cleanName": "ComfyUI_temp_xksty_00003_",
+          "image": "ComfyUI_temp_xksty_00003_.jpg",
+          "small": "ComfyUI_temp_xksty_00003_.small.jpg",
+          "thumb": "ComfyUI_temp_xksty_00003_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": []
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 11884584268087011000,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 6303197078401215000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  },
+  {
+    "clientId": "a371af79-57bb-4297-b9ba-76eca65f079d",
+    "promptId": "ee830694-380f-494c-8ac5-ac80fc04ccda",
+    "executionStart": 1732846547312,
+    "executationEnd": 1732846574868,
+    "promptNumber": 4,
+    "images": {
+      "upscalePreviewImage": {
+        "ComfyUI_temp_qgpvl_00010_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00010_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00010_",
+          "image": "ComfyUI_temp_qgpvl_00010_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00010_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00010_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00011_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00011_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00011_",
+          "image": "ComfyUI_temp_qgpvl_00011_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00011_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00011_.thumbnail.jpg"
+        },
+        "ComfyUI_temp_qgpvl_00012_.png": {
+          "originalFilename": "ComfyUI_temp_qgpvl_00012_.png",
+          "cleanName": "ComfyUI_temp_qgpvl_00012_",
+          "image": "ComfyUI_temp_qgpvl_00012_.jpg",
+          "small": "ComfyUI_temp_qgpvl_00012_.small.jpg",
+          "thumb": "ComfyUI_temp_qgpvl_00012_.thumbnail.jpg"
+        }
+      }
+    },
+    "modelInput": {
+      "checkpointName": "autismmixSDXL_autismmixConfetti.safetensors",
+      "loras": []
+    },
+    "imageInput": {
+      "batchSize": 3
+    },
+    "promptInput": {
+      "samplerInput": {
+        "seed": 12382882178461243000,
+        "steps": 25,
+        "cfg": 5,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      },
+      "positivePrompt": "score_9, score_8_up, score_7_up, score_6_up, fighter jet, parked, tarmac, ground",
+      "negativePrompt": "score_1, score_2, score_3\n\ntext, watermark"
+    },
+    "upscaleInput": {
+      "upscaleSamplerInput": {
+        "seed": 9870862143425100000,
+        "steps": 5,
+        "cfg": 1,
+        "samplerName": "euler",
+        "scheduler": "normal",
+        "denoise": 0.3
+      },
+      "upscaleWidth": 1024,
+      "upscaleHeight": 1536
+    }
+  }
+]

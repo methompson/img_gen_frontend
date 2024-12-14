@@ -1,11 +1,7 @@
 // import { DateTime } from 'luxon';
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
-  return (
-    !isNullOrUndefined(value) &&
-    typeof value === 'object' &&
-    !Array.isArray(value)
-  );
+  return !isNullOrUndefined(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
 export function isArray(value: unknown): value is unknown[] {
@@ -75,15 +71,15 @@ export function isError(input: unknown): input is Error {
   return isRecord(input) && input instanceof Error;
 }
 
-export function isStringOrUndefinedOrNull(
-  input: unknown,
-): input is String | undefined | null {
+export function isStringOrUndefinedOrNull(input: unknown): input is String | undefined | null {
   return isNullOrUndefined(input) || isString(input);
 }
 
-export function isNumberOrUndefinedOrNull(
-  input: unknown,
-): input is number | undefined | null {
+export function isNumberOrUndefined(input: unknown): input is number | undefined {
+  return isUndefined(input) || isNumber(input);
+}
+
+export function isNumberOrUndefinedOrNull(input: unknown): input is number | undefined | null {
   return isNullOrUndefined(input) || isNumber(input);
 }
 

@@ -17,6 +17,13 @@ export default [
 
   ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
+  {
+    name: 'app/rules-to-turn-off',
+    files: ['**/*.{ts,mts,tsx,vue}'],
+    rules: {
+      'vue/no-unused-vars': 'warn',
+    },
+  },
 
   {
     ...pluginVitest.configs.recommended,

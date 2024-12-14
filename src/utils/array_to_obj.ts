@@ -1,14 +1,14 @@
-export function listToMap<T>(
+export function arrayToMap<T>(
   input: T[],
   keygen: (input: T) => string | number,
 ): Record<string | number, T> {
-  return listToObject(input, keygen);
+  return arrayToObject(input, keygen);
 }
 
 // Converts an array of values to an object.
 // The keygen allows you to determine which value is the key.
 // e.g. you can select an id, or a name or some other unique value.
-export function listToObject<T>(
+export function arrayToObject<T>(
   input: T[],
   keygen: (input: T) => string | number,
 ): Record<string | number, T> {
@@ -21,7 +21,7 @@ export function listToObject<T>(
   return output;
 }
 
-export function listToMappedObject<T, U>(
+export function arrayToMappedObject<T, U>(
   input: T[],
   keygen: (input: T) => string | number,
   map: (input: T) => U,

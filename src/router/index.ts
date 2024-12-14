@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PromptHistoryViewer from '@/views/pages/prompt_history_viewer.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +6,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: PromptHistoryViewer,
+      component: () => import('@/views/pages/prompt_history_viewer.vue'),
+    },
+    {
+      path: '/gallery',
+      name: 'gallery',
+      component: () => import('@/views/pages/image_gallery.vue'),
+    },
+    {
+      path: '/prompt',
+      name: 'prompt',
+      component: () => import('@/views/pages/prompt_form.vue'),
     },
   ],
 });

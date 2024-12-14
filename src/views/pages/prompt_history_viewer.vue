@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { PromptCard } from '../components/prompt_card';
+// import { PromptCard } from '../components/prompt_card';
+import PromptCard from '@/views/components/prompt_card.vue';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { onBeforeMount } from 'vue';
