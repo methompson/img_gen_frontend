@@ -5,8 +5,8 @@ import { XMarkIcon } from '@heroicons/vue/24/solid';
 
 import SlideShow from '@/views/components/slide_show.vue';
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import type { ImageSet } from '@/models/history_data';
 import { getImageUrl } from '@/utils/make_image_url';
+import type { ImageSet } from '@/models/history';
 
 const imgGalleryStore = useImgGalleryStore();
 const { selectedImages, selectedImagesMap } = storeToRefs(imgGalleryStore);

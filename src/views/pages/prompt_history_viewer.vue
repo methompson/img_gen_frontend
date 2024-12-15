@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-// import { PromptCard } from '../components/prompt_card';
 import PromptCard from '@/views/components/prompt_card.vue';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
@@ -13,12 +12,16 @@ async function fetchHistory() {
   await imgGalleryStore.fetchHistory();
 }
 
-onBeforeMount(() => {
+async function onBeforeMountHandler() {
   try {
-    fetchHistory();
+    await fetchHistory();
   } catch (error) {
     console.error(error);
   }
+}
+
+onBeforeMount(() => {
+  onBeforeMountHandler();
 });
 </script>
 

@@ -42,30 +42,68 @@ export interface PromptAndHistoryDataJSON {
 
 // Parses potential PromptAndImageData interface and
 // constructs a class around it.
-export class PromptAndHistoryData {
-  protected clientId: string;
-  protected promptId: string;
-  protected promptNumber: number;
-  protected executionStart: number;
-  protected executionEnd: number;
+export class PromptAndImageData {
+  protected _clientId: string;
+  protected _promptId: string;
+  protected _promptNumber: number;
+  protected _executionStart: number;
+  protected _executionEnd: number;
 
-  protected images: ImageCollection;
-  protected workflowType: string;
-  protected workflow: Workflow;
+  protected _images: ImageCollection;
+  protected _workflowType: string;
+  protected _workflow: Workflow;
 
   constructor(input: PromptAndHistoryDataJSON) {
-    this.clientId = input.clientId;
-    this.promptId = input.promptId;
-    this.promptNumber = input.promptNumber;
-    this.executionStart = input.executionStart;
-    this.executionEnd = input.executationEnd;
-    this.images = input.images;
-    this.workflowType = input.workflowType;
-    this.workflow = input.workflow;
+    this._clientId = input.clientId;
+    this._promptId = input.promptId;
+    this._promptNumber = input.promptNumber;
+    this._executionStart = input.executionStart;
+    this._executionEnd = input.executationEnd;
+    this._images = input.images;
+    this._workflowType = input.workflowType;
+    this._workflow = input.workflow;
+  }
+
+  get clientId(): string {
+    return this._clientId;
+  }
+  get promptId(): string {
+    return this._promptId;
+  }
+  get promptNumber(): number {
+    return this._promptNumber;
+  }
+  get executionStart(): number {
+    return this._executionStart;
+  }
+  get executionEnd(): number {
+    return this._executionEnd;
+  }
+
+  get images(): ImageCollection {
+    return this._images;
+  }
+  get workflowType(): string {
+    return this._workflowType;
+  }
+  get workflow(): Workflow {
+    return this._workflow;
+  }
+
+  get positivePrompt(): string {
+    const result = this.workflow?.promptInput?.positivePrompt;
+
+    return isString(result) ? result : '';
+  }
+
+  get negativePrompt(): string {
+    const result = this.workflow?.promptInput?.negativePrompt;
+
+    return isString(result) ? result : '';
   }
 
   static isPromptAndHistoryDataJSON(input: unknown): input is PromptAndHistoryDataJSON {
-    const errors = PromptAndHistoryData.promptAndHistoryDataJSONTest(input);
+    const errors = PromptAndImageData.promptAndHistoryDataJSONTest(input);
     return errors.length === 0;
   }
 

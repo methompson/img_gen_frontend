@@ -1,4 +1,4 @@
-import { PromptAndHistoryData } from '@/models/history';
+import { PromptAndImageData } from '@/models/history';
 import { isArray } from '@/utils/type_guards';
 
 export async function fetchImages(): Promise<unknown[]> {
@@ -15,8 +15,8 @@ export async function fetchImages(): Promise<unknown[]> {
   console.log('history', data);
 
   for (const dat of data) {
-    if (PromptAndHistoryData.isPromptAndHistoryDataJSON(dat)) {
-      output.push(new PromptAndHistoryData(dat));
+    if (PromptAndImageData.isPromptAndHistoryDataJSON(dat)) {
+      output.push(new PromptAndImageData(dat));
     }
   }
 

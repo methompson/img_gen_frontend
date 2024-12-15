@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImageSet, PromptAndImageDataStruct } from '@/models/history_data';
+import type { ImageSet, PromptAndImageData } from '@/models/history';
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { isNullOrUndefined } from '@/utils/type_guards';
 import { storeToRefs } from 'pinia';
@@ -8,7 +8,7 @@ import { computed, toRefs } from 'vue';
 const imgGalleryStore = useImgGalleryStore();
 
 const props = defineProps<{
-  prompt: PromptAndImageDataStruct;
+  prompt: PromptAndImageData;
 }>();
 
 const { prompt } = toRefs(props);
@@ -56,8 +56,8 @@ function getImageClasses(imageSet: ImageSet) {
 <template>
   <div class="outline m-4 p-2">
     <h2>{{ prompt.promptNumber }}</h2>
-    <p>Positive: {{ prompt.positiveClip }}</p>
-    <p>Negative: {{ prompt.negativeClip }}</p>
+    <p>Positive: {{ prompt.positivePrompt }}</p>
+    <p>Negative: {{ prompt.negativePrompt }}</p>
 
     <template
       v-for="[imgKey, imgValue] in Object.entries(images)"
