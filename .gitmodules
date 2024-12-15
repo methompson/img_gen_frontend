@@ -1,0 +1,3 @@
+[submodule "packages/img_gen_submodule"]
+	path = packages/img_gen_submodule
+	url = https://github.com/methompson/img_gen_submodule.git
