@@ -3,10 +3,14 @@
   "include": [
     "env.d.ts",
     "src/**/*",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "packages/img_gen_submodule/src/**/*"
   ],
   "exclude": [
-    "src/**/__tests__/*"
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    "**/*.test.ts",
+    "**/*.test.js"
   ],
   "compilerOptions": {
     "strict": true,
@@ -15,11 +19,14 @@
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "types": [
-      "vite/client",
+      "vite/client"
     ],
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@img_gen/*": [
+        "./packages/img_gen_submodule/src/*"
       ]
     }
   }

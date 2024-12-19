@@ -6,7 +6,12 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      include: ['src/**/*.spec.(j|t)s', 'src/**/*.test.(j|t)s'],
+      include: [
+        'src/**/*.spec.js',
+        'src/**/*.spec.ts',
+        'src/**/*.test.js',
+        'src/**/*.test.ts',
+      ],
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),

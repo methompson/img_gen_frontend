@@ -11,6 +11,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@img_gen': fileURLToPath(
+        new URL('./packages/img_gen_submodule/src', import.meta.url),
+      ),
     },
   },
   server: {

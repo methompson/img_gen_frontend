@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, onUnmounted, ref, toRefs, type Ref } from 'vue';
+import {
+  computed,
+  onBeforeMount,
+  onUnmounted,
+  ref,
+  toRefs,
+  type Ref,
+} from 'vue';
 import { PlayIcon, StopIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
-import { isNullOrUndefined, isUndefined } from '@/utils/type_guards';
+import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
 
 const props = defineProps<{
   images: string[];

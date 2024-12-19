@@ -1,18 +1,15 @@
+import type { BasicImageGenWorkflow } from '@img_gen/models/workflows/basic_image_gen_workflow';
+import type { UpscaleImageGenWorkflow } from '@img_gen/models/workflows/upscale_workflow';
+import {
+  makeIndexedObjectTypeGuard,
+  makeTypeGuard,
+  makeTypeGuardTest,
+} from '@img_gen/utils/type_guard_generator';
+import { isNumber, isRecord, isString } from '@img_gen/utils/type_guards';
+
 // Images are defined by the following structure:
 // Root object keys are the node name. THe values are objects representing images generated
 // The Keys of the nested object are the original image names
-
-import { isNumber, isRecord, isString } from '@/utils/type_guards';
-
-// The values are the ImageSet object below
-export interface ImageCollection {
-  // The Node Name
-  [key: string]: {
-    // The original image name
-    [key: string]: ImageSet;
-  };
-}
-
 export interface ImageSet {
   cleanName: string;
   image: string;
@@ -20,14 +17,35 @@ export interface ImageSet {
   small: string;
   thumb: string;
 }
+export const isImageSet = makeTypeGuard<ImageSet>({
+  cleanName: isString,
+  image: isString,
+  originalFilename: isString,
+  small: isString,
+  thumb: isString,
+});
+
+// The values are the ImageSet object below
+export interface ImageCollection {
+  // The Node Name
+  [key: string]: {
+    // The image name
+    [key: string]: ImageSet;
+  };
+}
+
+const isNodeImageSet = makeIndexedObjectTypeGuard<{
+  [key: string]: ImageSet;
+}>(isImageSet);
+
+export const isImageCollection =
+  makeIndexedObjectTypeGuard<ImageCollection>(isNodeImageSet);
 
 // The workflow is a JSON object that represents the workflow
 // of the prompt. Current implementation doesn't require any
 // specific workflows, but eventually, we'll want to parse
 // some prompt data.
-export interface Workflow {
-  [key: string]: Record<string, unknown>;
-}
+export type Workflow = BasicImageGenWorkflow | UpscaleImageGenWorkflow;
 
 export interface PromptAndHistoryDataJSON {
   clientId: string;
@@ -39,6 +57,17 @@ export interface PromptAndHistoryDataJSON {
   workflowType: string;
   workflow: Workflow;
 }
+
+const promptAndHistoryDataJSONTest = makeTypeGuardTest({
+  clientId: isString,
+  promptId: isString,
+  promptNumber: isNumber,
+  executionStart: isNumber,
+  executionEnd: isNumber,
+  images: isImageCollection,
+  workflowType: isString,
+  workflow: isRecord,
+});
 
 // Parses potential PromptAndImageData interface and
 // constructs a class around it.
@@ -79,7 +108,6 @@ export class PromptAndImageData {
   get executionEnd(): number {
     return this._executionEnd;
   }
-
   get images(): ImageCollection {
     return this._images;
   }
@@ -89,92 +117,24 @@ export class PromptAndImageData {
   get workflow(): Workflow {
     return this._workflow;
   }
-
   get positivePrompt(): string {
     const result = this.workflow?.promptInput?.positivePrompt;
 
     return isString(result) ? result : '';
   }
-
   get negativePrompt(): string {
     const result = this.workflow?.promptInput?.negativePrompt;
 
     return isString(result) ? result : '';
   }
 
-  static isPromptAndHistoryDataJSON(input: unknown): input is PromptAndHistoryDataJSON {
-    const errors = PromptAndImageData.promptAndHistoryDataJSONTest(input);
-    return errors.length === 0;
+  static isPromptAndHistoryDataJSON(
+    input: unknown,
+  ): input is PromptAndHistoryDataJSON {
+    return PromptAndImageData.promptAndHistoryDataJSONTest(input).length === 0;
   }
 
   static promptAndHistoryDataJSONTest(input: unknown): string[] {
-    if (!isRecord(input)) {
-      return ['root'];
-    }
-
-    const output: string[] = [];
-
-    if (!isString(input.clientId)) {
-      output.push('clientId');
-    }
-    if (!isString(input.promptId)) {
-      output.push('promptId');
-    }
-    if (!isNumber(input.promptNumber)) {
-      output.push('promptNumber');
-    }
-    if (!isNumber(input.executionStart)) {
-      output.push('executionStart');
-    }
-    if (!isNumber(input.executionEnd)) {
-      output.push('executionEnd');
-    }
-
-    if (!this.isImageCollection(input.images)) {
-      output.push('images');
-    }
-    if (!isString(input.workflowType)) {
-      output.push('workflowType');
-    }
-    if (!isRecord(input.workflow)) {
-      output.push('workflow');
-    }
-
-    return output;
-  }
-
-  static isImageCollection(input: unknown): input is ImageCollection {
-    if (!isRecord(input)) {
-      return false;
-    }
-
-    for (const node of Object.values(input)) {
-      if (!isRecord(node)) {
-        return false;
-      }
-
-      for (const image of Object.values(node)) {
-        if (!isRecord(image)) {
-          return false;
-        }
-        if (!isString(image.cleanName)) {
-          return false;
-        }
-        if (!isString(image.image)) {
-          return false;
-        }
-        if (!isString(image.originalFilename)) {
-          return false;
-        }
-        if (!isString(image.small)) {
-          return false;
-        }
-        if (!isString(image.thumb)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return promptAndHistoryDataJSONTest(input);
   }
 }

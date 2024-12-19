@@ -1,4 +1,4 @@
-import { isRecord, isStringArray } from '@/utils/type_guards';
+import { isRecord, isStringArray } from '@img_gen/utils/type_guards';
 
 export interface GetModelsOutput {
   models: string[];
@@ -16,7 +16,9 @@ export async function fetchModels(): Promise<GetModelsOutput> {
 
   const models = isStringArray(data.models) ? data.models : [];
   const loras = isStringArray(data.loras) ? data.loras : [];
-  const upscaleModels = isStringArray(data.upscaleModels) ? data.upscaleModels : [];
+  const upscaleModels = isStringArray(data.upscaleModels)
+    ? data.upscaleModels
+    : [];
 
   return { models, loras, upscaleModels };
 }

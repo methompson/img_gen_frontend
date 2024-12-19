@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
-import { computed, ref, type Ref } from 'vue';
+import { computed, ref, type ComputedRef, type Ref } from 'vue';
 
-import type { ImageSet, PromptAndImageDataStruct } from '@/models/history_data';
+import type { ImageSet, PromptAndImageData } from '@/models/history';
 
 import * as historyApi from '@/api/history';
 import * as modelsApi from '@/api/models';
-import { arrayToMap } from '@/utils/array_to_obj';
+import { arrayToMap } from '@img_gen/utils/array_to_obj';
 
 export const useImgGalleryStore = defineStore('imageGallery', () => {
-  const promptDataState: Ref<PromptAndImageDataStruct[]> = ref([]);
+  const promptDataState: Ref<PromptAndImageData[]> = ref([]);
   const selectedImageState: Ref<ImageSet[]> = ref([]);
   const modelsState: Ref<modelsApi.GetModelsOutput> = ref({
     models: [],
@@ -18,8 +18,12 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
 
   const promptData = computed(() => [...promptDataState.value]);
   const selectedImages = computed(() => [...selectedImageState.value]);
-  const selectedImagesMap = computed(() => arrayToMap(selectedImages.value, (i) => i.image));
-  const models = computed(() => JSON.parse(JSON.stringify(modelsState.value)));
+  const selectedImagesMap = computed(() =>
+    arrayToMap(selectedImages.value, (i) => i.image),
+  );
+  const models: ComputedRef<modelsApi.GetModelsOutput> = computed(() => ({
+    ...modelsState.value,
+  }));
 
   async function fetchHistory() {
     const history = await historyApi.fetchImages();
@@ -40,7 +44,9 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
   }
 
   async function removeSelectedImage(imageSet: ImageSet) {
-    selectedImageState.value = selectedImageState.value.filter((i) => i.image !== imageSet.image);
+    selectedImageState.value = selectedImageState.value.filter(
+      (i) => i.image !== imageSet.image,
+    );
   }
 
   return {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ImageSet, PromptAndImageData } from '@/models/history';
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import { isNullOrUndefined } from '@/utils/type_guards';
+import { isNullOrUndefined } from '@img_gen/utils/type_guards';
 import { storeToRefs } from 'pinia';
 import { computed, toRefs } from 'vue';
 
@@ -65,9 +65,15 @@ function getImageClasses(imageSet: ImageSet) {
     >
       {{ imgKey }}
       <div class="flex flex-row">
-        <template v-for="img in imgValue" :key="`${prompt.promptId}_${img.image}`">
+        <template
+          v-for="img in imgValue"
+          :key="`${prompt.promptId}_${img.image}`"
+        >
           <span :class="getImageClasses(img)">
-            <img @click="() => imageClick(img)" :src="`http://localhost:3000/image/${img.thumb}`" />
+            <img
+              @click="() => imageClick(img)"
+              :src="`http://localhost:3000/image/${img.thumb}`"
+            />
           </span>
         </template>
       </div>
