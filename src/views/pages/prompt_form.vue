@@ -1,82 +1,20 @@
-<script setup lang="ts">
-import { computed, onBeforeMount, ref, watch, type Ref } from 'vue';
-import { storeToRefs } from 'pinia';
-
-import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import { randomSeed } from '@/utils/max_seed';
-import type { PromptAndImageData } from '@/models/history';
-
-import BasicButton from '@/views/components/basic_button.vue';
-import LeftPane from '@/views/components/prompt_form/left_pane.vue';
-
-const imgGalleryStore = useImgGalleryStore();
-
-const { promptData, models } = storeToRefs(imgGalleryStore);
-
-const checkpoint = ref('');
-
-const positivePrompt = ref('');
-const negativePrompt = ref('');
-
-const samplerSeed = ref('');
-const samplerSteps = ref('25');
-const samplerCfg = ref('5');
-const samplerName = ref('euler');
-const samplerScheduler = ref('normal');
-const samplerDenoise = ref('1');
-
-watch(samplerName, (newVal) => {
-  console.log('newVal', newVal);
-});
-
-const samplerSeedNum = computed(() => Number.parseInt(samplerSeed.value, 10));
-const samplerStepsNum = computed(() => Number.parseInt(samplerSteps.value, 10));
-const samplerCfgNum = computed(() => Number.parseFloat(samplerCfg.value));
-const samplerDenoiseNum = computed(() =>
-  Number.parseFloat(samplerDenoise.value),
-);
-
-const canQueue = computed(() => {
-  return (
-    checkpoint.value.length > 0 &&
-    !Number.isNaN(samplerSeedNum.value) &&
-    !Number.isNaN(samplerStepsNum.value) &&
-    !Number.isNaN(samplerCfgNum.value) &&
-    !Number.isNaN(samplerDenoiseNum.value)
-  );
-});
-
-onBeforeMount(() => {
-  samplerSeed.value = `${randomSeed()}`;
-  fetchNeededData();
-});
-
-function loadPrompt(prompt: PromptAndImageData) {
-  positivePrompt.value = prompt.positivePrompt;
-  negativePrompt.value = prompt.negativePrompt;
-
-  const samplerData = prompt.workflow.promptInput.samplerInput;
-  samplerSeed.value = `${samplerData.seed}`;
-  samplerSteps.value = `${samplerData.steps}`;
-  samplerCfg.value = `${samplerData.cfg}`;
-  samplerName.value = samplerData.samplerName;
-  samplerScheduler.value = samplerData.scheduler;
-  samplerDenoise.value = `${samplerData.denoise}`;
-}
-
-async function fetchNeededData() {
-  try {
-    await Promise.all([
-      imgGalleryStore.fetchHistory(),
-      imgGalleryStore.fetchModels(),
-    ]);
-  } catch (e) {}
-}
-</script>
-
 <template>
   <div class="paneContainer flex flex-row">
-    <LeftPane :models="models" />
+    <div>
+      <select v-model="workflowType" class="ml-2 mb-2">
+        <option :value="Workflow.basicImageGen">Basic Image</option>
+        <option :value="Workflow.upscaleImageGen">
+          Basic Image with Upscale
+        </option>
+      </select>
+
+      <PromptInputs
+        :models="models"
+        :workflow="workflow"
+        :workflowType="workflowType"
+        @updateWorkflow="updateWorkflow"
+      />
+    </div>
 
     <div class="rightPane mx-2">
       <div>Prompt History</div>
@@ -94,6 +32,93 @@ async function fetchNeededData() {
     <BasicButton :disabled="!canQueue">Queue Prompt</BasicButton>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed, onBeforeMount, ref, type Ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useImgGalleryStore } from '@/stores/img_gallery_store';
+import type { PromptAndImageData } from '@/models/history';
+
+import BasicButton from '@/views/components/basic_button.vue';
+import PromptInputs from '@/views/components/prompt_form/prompt_inputs.vue';
+import {
+  isBasicImageGenWorkflow,
+  type BasicImageGenWorkflow,
+} from '@img_gen/models/workflows/basic_image_gen_workflow';
+import {
+  isUpscaleImageGenWorkflow,
+  type UpscaleImageGenWorkflow,
+} from '@img_gen/models/workflows/upscale_workflow';
+import { isUndefined } from '@img_gen/utils/type_guards';
+import { isPromptModels } from '@img_gen/models/inputs/prompt_models';
+import { isLatentImagePrompt } from '@img_gen/models/inputs/latent_image_input';
+import { isPromptSampler } from '@img_gen/models/inputs/prompt_sampler';
+import {
+  getWorkflowFromName,
+  Workflow,
+} from '@img_gen/models/workflows/workflows';
+
+const imgGalleryStore = useImgGalleryStore();
+
+const { promptData, models } = storeToRefs(imgGalleryStore);
+
+const workflow: Ref<
+  BasicImageGenWorkflow | UpscaleImageGenWorkflow | undefined
+> = ref(undefined);
+
+const workflowType = ref(Workflow.upscaleImageGen);
+
+const canQueue = computed(() => {
+  return !isUndefined(workflow.value);
+});
+
+onBeforeMount(() => {
+  fetchNeededData();
+});
+
+function loadPrompt(prompt: PromptAndImageData) {
+  console.log({
+    prompt: prompt,
+    imageInput: prompt.workflow.imageInput,
+    isBasicImageGenWorkflow: isBasicImageGenWorkflow(prompt.workflow),
+    isUpscaleImageGenWorkflow: isUpscaleImageGenWorkflow(prompt.workflow),
+    isPromptModels: isPromptModels(prompt.workflow.modelInput),
+    islatentImage: isLatentImagePrompt(prompt.workflow.imageInput),
+    isPromptSampler: isPromptSampler(prompt.workflow.promptInput),
+  });
+
+  const workflowType = getWorkflowFromName(prompt.workflowType);
+  switch (workflowType) {
+    case Workflow.basicImageGen:
+      if (isBasicImageGenWorkflow(prompt.workflow)) {
+        updateWorkflow(prompt.workflow);
+      }
+    case Workflow.upscaleImageGen:
+      if (isUpscaleImageGenWorkflow(prompt.workflow)) {
+        updateWorkflow(prompt.workflow);
+      }
+    default:
+    // do nothing
+  }
+}
+
+async function fetchNeededData() {
+  try {
+    await Promise.all([
+      imgGalleryStore.fetchHistory(),
+      imgGalleryStore.fetchModels(),
+    ]);
+  } catch (e) {}
+}
+
+function updateWorkflow(
+  input: BasicImageGenWorkflow | UpscaleImageGenWorkflow | undefined,
+) {
+  console.log('updating workflow');
+  workflow.value = input;
+}
+</script>
 
 <style scoped>
 .queueButton {

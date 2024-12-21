@@ -21,7 +21,7 @@
         @change="updateLora"
         :class="inputClasses + ' loraStrengthModelInput'"
         size="2"
-        type="text"
+        type="number"
         placeholder="Strength Model"
       />
 
@@ -30,7 +30,7 @@
         v-model="strengthClip"
         @change="updateLora"
         :class="inputClasses + ' loraStrengthClipInput'"
-        type="text"
+        type="number"
         placeholder="Strength Clip"
       />
     </div>
@@ -38,18 +38,25 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, toRefs } from 'vue';
+import { onBeforeMount, ref, toRefs, watch } from 'vue';
 import { MinusIcon } from '@heroicons/vue/24/solid';
 
 import type { PromptLoraInput } from './types';
 
 import BasicButton from '@/views/components/basic_button.vue';
 
-const props = defineProps<{
-  lora: PromptLoraInput;
-  loraNames: string[];
-  inputClasses: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    testing?: boolean;
+    inputClasses?: string;
+    lora: PromptLoraInput;
+    loraNames: string[];
+  }>(),
+  {
+    inputClasses: '',
+    testing: false,
+  },
+);
 
 const { lora, loraNames, inputClasses } = toRefs(props);
 
@@ -59,31 +66,34 @@ const emit = defineEmits<{
 }>();
 
 const modelName = ref('');
-const strengthModel = ref('');
-const strengthClip = ref('');
+const strengthModel = ref(1);
+const strengthClip = ref(1);
 
 onBeforeMount(() => {
+  if (!props.testing) {
+    beforeMountHandler();
+  }
+});
+
+function beforeMountHandler() {
   modelName.value = lora.value.name
     ? lora.value.name
     : (loraNames.value[0] ?? '');
 
-  strengthModel.value = `${lora.value.strengthModel}`;
-  strengthClip.value = `${lora.value.strengthClip}`;
-});
+  strengthModel.value = lora.value.strengthModel;
+  strengthClip.value = lora.value.strengthClip;
+}
 
 function removeLora() {
   emit('removeLora', lora.value.id);
 }
 
 function updateLora() {
-  const sm = Number.parseInt(strengthModel.value, 10);
-  const sc = Number.parseInt(strengthClip.value, 10);
-
   emit('updateLora', {
     id: lora.value.id,
     name: modelName.value,
-    strengthModel: sm,
-    strengthClip: sc,
+    strengthModel: strengthModel.value,
+    strengthClip: strengthClip.value,
     position: lora.value.position,
   });
 }

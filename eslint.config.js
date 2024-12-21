@@ -21,7 +21,33 @@ export default [
     name: 'app/rules-to-turn-off',
     files: ['**/*.{ts,mts,tsx,vue}'],
     rules: {
-      'vue/no-unused-vars': 'warn',
+      'vue/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['../*'],
+              message: 'Usage of relative parent imports is not allowed.',
+            },
+          ],
+        },
+      ],
     },
   },
 
