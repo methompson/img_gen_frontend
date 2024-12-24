@@ -3,10 +3,16 @@ import { storeToRefs } from 'pinia';
 import PromptCard from '@/views/components/prompt_card.vue';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import { onBeforeMount } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 
 const imgGalleryStore = useImgGalleryStore();
 const { promptData } = storeToRefs(imgGalleryStore);
+
+const sortedPrompts = computed(() => {
+  return [...promptData.value].sort((a, b) => {
+    return a.promptNumber - b.promptNumber;
+  });
+});
 
 async function fetchHistory() {
   await imgGalleryStore.fetchHistory();
@@ -26,7 +32,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <template v-for="prompt in promptData" :key="`card_${prompt.promptId}`">
+  <template v-for="prompt in sortedPrompts" :key="`card_${prompt.promptId}`">
     <PromptCard :prompt="prompt" />
   </template>
 </template>

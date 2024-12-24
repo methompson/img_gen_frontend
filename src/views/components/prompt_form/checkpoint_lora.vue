@@ -1,36 +1,50 @@
 <template>
-  <h1 class="text-lg font-bold">Checkpoint & Loras</h1>
+  <span class="flex flex-row justify-between w-100">
+    <h1 class="text-lg font-bold">Checkpoint & Loras</h1>
 
-  <div>Checkpoint</div>
+    <BasicButton @click="toggleShowCheckpointCard">
+      <template v-if="showCheckpointCard">
+        <XMarkIcon class="h-4 w-4" />
+      </template>
 
-  <select
-    v-model="checkpoint"
-    @change="updateModelInput"
-    :class="inputClasses + ' w-full'"
-  >
-    <option v-for="model in models.models" :key="model">{{ model }}</option>
-  </select>
+      <template v-else>
+        <PlusIcon class="h-4 w-4" />
+      </template>
+    </BasicButton>
+  </span>
 
-  <div>LORAs</div>
+  <span v-if="showCheckpointCard">
+    <div>Checkpoint</div>
 
-  <BasicButton @click="addLora">
-    <PlusIcon class="h-6 w-6" />
-  </BasicButton>
+    <select
+      v-model="checkpoint"
+      @change="updateModelInput"
+      :class="inputClasses + ' w-full'"
+    >
+      <option v-for="model in models.models" :key="model">{{ model }}</option>
+    </select>
 
-  <template v-for="lora in loras" :key="lora.id">
-    <LoraInput
-      :loraNames="loraNames"
-      :lora="lora"
-      :inputClasses="inputClasses"
-      @removeLora="removeLora"
-      @updateLora="updateLora"
-    />
-  </template>
+    <div>LORAs</div>
+
+    <BasicButton @click="addLora">
+      <PlusIcon class="h-6 w-6" />
+    </BasicButton>
+
+    <template v-for="lora in loras" :key="lora.id">
+      <LoraInput
+        :loraNames="loraNames"
+        :lora="lora"
+        :inputClasses="inputClasses"
+        @removeLora="removeLora"
+        @updateLora="updateLora"
+      />
+    </template>
+  </span>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, toRefs, watch, type ComputedRef, type Ref } from 'vue';
-import { PlusIcon } from '@heroicons/vue/24/solid';
+import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { v4 as uuidv4 } from 'uuid';
 
 import BasicButton from '@/views/components/basic_button.vue';
@@ -83,6 +97,7 @@ const emit = defineEmits<{
   (e: 'updateModelInput', input: PromptModels | undefined): void;
 }>();
 
+const showCheckpointCard = ref(true);
 const addedLoras: Ref<Record<string, PromptLoraInput>> = ref({});
 const checkpoint = ref('');
 
@@ -121,6 +136,10 @@ const nextLoraPosition = computed(() => {
   const positions = loras.value.map((lora) => lora.position);
   return Math.max(...positions, 0) + 1;
 });
+
+function toggleShowCheckpointCard() {
+  showCheckpointCard.value = !showCheckpointCard.value;
+}
 
 function addLora() {
   const id = uuidv4();

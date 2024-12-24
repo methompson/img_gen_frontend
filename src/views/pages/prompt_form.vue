@@ -1,9 +1,9 @@
 <template>
   <div class="paneContainer flex flex-row">
-    <div>
+    <div class="leftPane">
       <select v-model="workflowType" class="ml-2 mb-2">
-        <option :value="Workflow.basicImageGen">Basic Image</option>
-        <option :value="Workflow.upscaleImageGen">
+        <option :value="WorkflowType.basicImageGen">Basic Image</option>
+        <option :value="WorkflowType.upscaleImageGen">
           Basic Image with Upscale
         </option>
       </select>
@@ -17,31 +17,43 @@
     </div>
 
     <div class="rightPane mx-2">
-      <div>Prompt History</div>
-
-      <template v-for="prompt in promptData" :key="prompt.promptId">
-        <div class="flex justify-between mb-2">
-          {{ prompt.promptNumber }}
-          <BasicButton @click="loadPrompt(prompt)">Load</BasicButton>
+      <span class="historyButtonsContainer">
+        <div>
+          Prompt History
+          <BasicButton @click="refreshHistory">
+            <ArrowPathIcon class="h-6 w-6" />
+          </BasicButton>
         </div>
-      </template>
+
+        <template v-for="prompt in sortedPromptHistory" :key="prompt.promptId">
+          <div class="flex justify-between mb-2">
+            {{ prompt.promptNumber }}
+            <BasicButton @click="loadPrompt(prompt)">Load</BasicButton>
+            <BasicButton @click="deletePrompt(prompt)">Delete</BasicButton>
+          </div>
+        </template>
+      </span>
     </div>
   </div>
 
   <div class="queueButton bottom-0 sticky py-4">
-    <BasicButton :disabled="!canQueue">Queue Prompt</BasicButton>
+    <BasicButton @click="queuePrompt" :disabled="!canQueue"
+      >Queue Prompt</BasicButton
+    >
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
+import { useAppStore } from '@/stores/app_store';
 import type { PromptAndImageData } from '@/models/history';
 
 import BasicButton from '@/views/components/basic_button.vue';
-import PromptInputs from '@/views/components/prompt_form/prompt_inputs.vue';
+import PromptInputs from '@/views/components/prompt_inputs.vue';
 import {
   isBasicImageGenWorkflow,
   type BasicImageGenWorkflow,
@@ -50,32 +62,60 @@ import {
   isUpscaleImageGenWorkflow,
   type UpscaleImageGenWorkflow,
 } from '@img_gen/models/workflows/upscale_workflow';
-import { isUndefined } from '@img_gen/utils/type_guards';
+import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
 import { isPromptModels } from '@img_gen/models/inputs/prompt_models';
 import { isLatentImagePrompt } from '@img_gen/models/inputs/latent_image_input';
 import { isPromptSampler } from '@img_gen/models/inputs/prompt_sampler';
 import {
   getWorkflowFromName,
-  Workflow,
+  WorkflowType,
 } from '@img_gen/models/workflows/workflows';
 
+const appStore = useAppStore();
 const imgGalleryStore = useImgGalleryStore();
-
 const { promptData, models } = storeToRefs(imgGalleryStore);
 
 const workflow: Ref<
   BasicImageGenWorkflow | UpscaleImageGenWorkflow | undefined
 > = ref(undefined);
 
-const workflowType = ref(Workflow.upscaleImageGen);
+const workflowType = ref(WorkflowType.upscaleImageGen);
 
 const canQueue = computed(() => {
   return !isUndefined(workflow.value);
 });
 
-onBeforeMount(() => {
-  fetchNeededData();
+const sortedPromptHistory = computed(() => {
+  return [...promptData.value].sort((a, b) => {
+    return a.promptNumber - b.promptNumber;
+  });
 });
+
+onBeforeMount(() => {
+  beforeMountHandler();
+});
+
+async function beforeMountHandler() {
+  const rawData = localStorage.getItem('currentWorkflow');
+  await fetchNeededData();
+
+  try {
+    if (!isNullOrUndefined(rawData)) {
+      const savedData = JSON.parse(rawData);
+      if (
+        (isBasicImageGenWorkflow(savedData.workflow) ||
+          isUpscaleImageGenWorkflow(savedData.workflow)) &&
+        savedData.workflowType
+      ) {
+        workflow.value = savedData.workflow;
+        workflowType.value = savedData.workflowType;
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    appStore.setErrorMessage({ message: 'Error loading saved workflow' });
+  }
+}
 
 function loadPrompt(prompt: PromptAndImageData) {
   console.log({
@@ -88,14 +128,16 @@ function loadPrompt(prompt: PromptAndImageData) {
     isPromptSampler: isPromptSampler(prompt.workflow.promptInput),
   });
 
-  const workflowType = getWorkflowFromName(prompt.workflowType);
-  switch (workflowType) {
-    case Workflow.basicImageGen:
+  const type = getWorkflowFromName(prompt.workflowType);
+  switch (type) {
+    case WorkflowType.basicImageGen:
       if (isBasicImageGenWorkflow(prompt.workflow)) {
+        workflowType.value = WorkflowType.basicImageGen;
         updateWorkflow(prompt.workflow);
       }
-    case Workflow.upscaleImageGen:
+    case WorkflowType.upscaleImageGen:
       if (isUpscaleImageGenWorkflow(prompt.workflow)) {
+        workflowType.value = WorkflowType.upscaleImageGen;
         updateWorkflow(prompt.workflow);
       }
     default:
@@ -115,9 +157,46 @@ async function fetchNeededData() {
 function updateWorkflow(
   input: BasicImageGenWorkflow | UpscaleImageGenWorkflow | undefined,
 ) {
-  console.log('updating workflow');
   workflow.value = input;
+
+  if (!isUndefined(input)) {
+    localStorage.setItem(
+      'currentWorkflow',
+      JSON.stringify({
+        workflow: input,
+        workflowType: workflowType.value,
+      }),
+    );
+  } else {
+    // localStorage.removeItem('currentWorkflow');
+  }
 }
+
+async function queuePrompt() {
+  if (isUndefined(workflow.value)) {
+    return;
+  }
+
+  try {
+    await imgGalleryStore.queuePrompt(workflowType.value, workflow.value);
+    appStore.setSuccessMessage({ message: 'Prompt queued' });
+  } catch (e) {
+    console.error(e);
+    appStore.setErrorMessage({ message: 'Error queuing prompt' });
+  }
+}
+
+async function refreshHistory() {
+  try {
+    await imgGalleryStore.fetchHistory();
+    appStore.setSuccessMessage({ message: 'History refreshed' });
+  } catch (e) {
+    console.error(e);
+    appStore.setErrorMessage({ message: 'Error refreshing history' });
+  }
+}
+
+async function deletePrompt(prompt: PromptAndImageData) {}
 </script>
 
 <style scoped>
@@ -129,5 +208,18 @@ function updateWorkflow(
 
 .leftPane {
   font-size: 0.75rem;
+  max-width: 75%;
+  min-width: 75%;
+}
+
+.historyButtonsContainer {
+  position: sticky;
+  top: 0;
+}
+</style>
+
+<style>
+.errorCard {
+  border: 1px solid #dc2626 !important;
 }
 </style>

@@ -1,115 +1,79 @@
 <template>
-  <div class="leftPane mx-2">
-    <!-- PromptModels Input -->
-    <div class="promptModelsInput">
-      <CheckpointLora
-        :models="models"
-        :inputClasses="inputClasses"
-        :modelInput="modelInput"
-        @updateModelInput="updateModelInput"
-      />
-    </div>
-
-    <!-- Image Input -->
-    <div class="latentImageInput">
-      <h1 class="text-lg font-bold">Image & Batch Size</h1>
-
-      <ImageInput
-        :inputClasses="inputClasses"
-        :latentInput="latentInput"
-        @updateImageInput="updateImageInput"
-      />
-    </div>
-
-    <!-- PromptSamplerInput -->
-
-    <div class="clipSamplerInput">
-      <h1 class="text-lg font-bold">Clip and Sampler</h1>
-
-      <ClipSamplerForm
-        :inputClasses="inputClasses"
-        :promptSamplerInput="promptSamplerInput"
-        @updateClipSampler="updateClipSampler"
-      />
-    </div>
-
-    <div class="upscaleInput">
-      <h1 class="text-lg font-bold">Upscale</h1>
-
-      <UpscaleInput :inputClasses="inputClasses" />
-    </div>
+  <div class="mx-2">
+    <BasicImageGenForm
+      v-if="isBasicImageGenWorkflowForm"
+      :workflow="basicImageGenWorkflow"
+      :inputClasses="inputClasses"
+      :models="models"
+      @updateWorkflow="updateWorkflow"
+    />
+    <UpscalePromptForm
+      v-else-if="isUpscaleImageGenWorkflowForm"
+      :workflow="upscaleImageGenWorkflow"
+      :inputClasses="inputClasses"
+      :models="models"
+      @updateWorkflow="updateWorkflow"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, toRefs, watch, type Ref } from 'vue';
+import { computed, onBeforeMount, toRefs, watch } from 'vue';
 
 import type { GetModelsOutput } from '@/api/models';
 
-import ImageInput from '@/views/components/prompt_form/image_input.vue';
-import CheckpointLora from '@/views/components/prompt_form/checkpoint_lora.vue';
-import ClipSamplerForm from '@/views/components/prompt_form/clip_sampler_form.vue';
-import UpscaleInput from '@/views/components/prompt_form/upscale_input.vue';
+import {
+  isBasicImageGenWorkflow,
+  type BasicImageGenWorkflow,
+} from '@img_gen/models/workflows/basic_image_gen_workflow';
+import {
+  isUpscaleImageGenWorkflow,
+  type UpscaleImageGenWorkflow,
+} from '@img_gen/models/workflows/upscale_workflow';
+import {
+  WorkflowType,
+  type Workflow,
+} from '@img_gen/models/workflows/workflows';
 
-import type { LatentImagePrompt } from '@img_gen/models/inputs/latent_image_input';
-import type { PromptModels } from '@img_gen/models/inputs/prompt_models';
-import type { PromptSampler } from '@img_gen/models/inputs/prompt_sampler';
-import type { BasicImageGenWorkflow } from '@img_gen/models/workflows/basic_image_gen_workflow';
-import { isUndefined } from '@img_gen/utils/type_guards';
-import type { UpscaleImageGenWorkflow } from '@img_gen/models/workflows/upscale_workflow';
-import type { Workflow } from '@img_gen/models/workflows/workflows';
+import BasicImageGenForm from '@/views/components/workflow_forms/basic_image_gen_form.vue';
+import UpscalePromptForm from '@/views/components/workflow_forms/upscale_prompt_form.vue';
+
+const emit = defineEmits<{
+  (
+    e: 'updateWorkflow',
+    payload: UpscaleImageGenWorkflow | BasicImageGenWorkflow | undefined,
+  ): void;
+}>();
 
 const props = defineProps<{
   models: GetModelsOutput;
-  workflowType: Workflow;
+  workflowType: WorkflowType;
   workflow?: BasicImageGenWorkflow | UpscaleImageGenWorkflow;
 }>();
 
-const { workflow } = toRefs(props);
-watch(workflow, (newValue) => {
-  console.log('workflow changed');
+const { workflow, workflowType } = toRefs(props);
 
-  if (isUndefined(newValue)) {
-    console.log('workflow is undefined');
-    modelInput.value = undefined;
-    latentInput.value = undefined;
-    promptSamplerInput.value = undefined;
-    return;
-  }
-
-  if (
-    newValue.modelInput &&
-    JSON.stringify(newValue.modelInput) !== JSON.stringify(modelInput.value)
-  ) {
-    console.log('modelInput changed');
-    modelInput.value = newValue.modelInput;
-  }
-
-  if (
-    newValue.imageInput &&
-    JSON.stringify(newValue.imageInput) !== JSON.stringify(latentInput.value)
-  ) {
-    console.log('imageInput changed');
-    latentInput.value = newValue.imageInput;
-  }
-
-  if (
-    newValue.promptInput &&
-    JSON.stringify(newValue.promptInput) !==
-      JSON.stringify(promptSamplerInput.value)
-  ) {
-    console.log('promptInput changed');
-    promptSamplerInput.value = newValue.promptInput;
-  }
+const isBasicImageGenWorkflowForm = computed(() => {
+  return workflowType.value === WorkflowType.basicImageGen;
 });
 
-const emit = defineEmits<{
-  (e: 'updateWorkflow', payload: BasicImageGenWorkflow | undefined): void;
-}>();
+const isUpscaleImageGenWorkflowForm = computed(() => {
+  return workflowType.value === WorkflowType.upscaleImageGen;
+});
 
-const modelInput: Ref<PromptModels | undefined> = ref(undefined);
-const latentInput: Ref<LatentImagePrompt | undefined> = ref(undefined);
-const promptSamplerInput: Ref<PromptSampler | undefined> = ref(undefined);
+const basicImageGenWorkflow = computed(() => {
+  return workflowType.value === WorkflowType.basicImageGen &&
+    isBasicImageGenWorkflow(workflow.value)
+    ? workflow.value
+    : undefined;
+});
+
+const upscaleImageGenWorkflow = computed(() => {
+  return workflowType.value === WorkflowType.upscaleImageGen &&
+    isUpscaleImageGenWorkflow(workflow.value)
+    ? workflow.value
+    : undefined;
+});
 
 const inputClasses = computed(() => {
   const classes = [
@@ -129,42 +93,11 @@ onBeforeMount(() => {
 });
 
 function beforeMountHandler() {
-  updateWorkflow();
+  // updateWorkflow();
 }
 
-function updateImageInput(input: LatentImagePrompt | undefined) {
-  latentInput.value = input;
-
-  updateWorkflow();
-}
-
-function updateModelInput(input: PromptModels | undefined) {
-  modelInput.value = input;
-
-  updateWorkflow();
-}
-
-function updateClipSampler(input: PromptSampler | undefined) {
-  promptSamplerInput.value = input;
-
-  updateWorkflow();
-}
-
-function updateWorkflow() {
-  if (
-    isUndefined(modelInput.value) ||
-    isUndefined(latentInput.value) ||
-    isUndefined(promptSamplerInput.value)
-  ) {
-    emit('updateWorkflow', undefined);
-    return;
-  }
-
-  emit('updateWorkflow', {
-    modelInput: modelInput.value,
-    imageInput: latentInput.value,
-    promptInput: promptSamplerInput.value,
-  });
+function updateWorkflow(updatedWorkflow: Workflow | undefined) {
+  emit('updateWorkflow', updatedWorkflow);
 }
 </script>
 

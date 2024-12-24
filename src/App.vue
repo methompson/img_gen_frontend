@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
+import { computed } from 'vue';
 
 import TopBar from '@/views/components/top_bar.vue';
-import { computed } from 'vue';
+import SnackBar from '@/views/components/snackbar.vue';
 
 const appClasses = computed(() => {
   const classes = [
@@ -24,5 +25,6 @@ const appClasses = computed(() => {
   <div :class="appClasses">
     <TopBar />
     <RouterView />
+    <SnackBar />
   </div>
 </template>

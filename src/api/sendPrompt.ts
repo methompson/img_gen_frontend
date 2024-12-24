@@ -1,29 +1,22 @@
-// TODO change this to weight
-export interface LoraInput {
-  name: string;
-  strength: number;
-}
+import type { Workflow } from '@img_gen/models/workflows/workflows';
 
-export interface SamplerDataInput {
-  seed?: number;
-  steps?: number;
-  cfg?: number;
-  samplerName?: string;
-  scheduler?: string;
-  denoise?: number;
-}
+export async function sendPrompt(
+  promptType: string,
+  prompt: Workflow,
+): Promise<void> {
+  const body = JSON.stringify({
+    workflow: promptType,
+    ...prompt,
+  });
 
-export interface PromptInput {
-  checkpointName: string;
-  positivePrompt: string;
-  negativePrompt: string;
-  loras?: LoraInput[];
-  latentWidth?: number;
-  latentHeight?: number;
-  upsizeMultiplier?: number;
-  batchSize?: number;
-  inputSamplerData?: SamplerDataInput;
-  upscaleSamplerData: SamplerDataInput;
-}
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
 
-export async function sendPrompt(prompt: PromptInput): Promise<void> {}
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body,
+  };
+
+  await fetch('http://localhost:3000/sendPrompt', requestOptions);
+}

@@ -30,3 +30,8 @@ export function getDefaultImageSamplerData(): SamplerData {
     denoise: 1,
   };
 }
+
+export interface InputDimensions {
+  width: number;
+  height: number;
+}

@@ -1,5 +1,4 @@
-import type { BasicImageGenWorkflow } from '@img_gen/models/workflows/basic_image_gen_workflow';
-import type { UpscaleImageGenWorkflow } from '@img_gen/models/workflows/upscale_workflow';
+import type { Workflow } from '@img_gen/models/workflows/workflows';
 import {
   makeIndexedObjectTypeGuard,
   makeTypeGuard,
@@ -40,12 +39,6 @@ const isNodeImageSet = makeIndexedObjectTypeGuard<{
 
 export const isImageCollection =
   makeIndexedObjectTypeGuard<ImageCollection>(isNodeImageSet);
-
-// The workflow is a JSON object that represents the workflow
-// of the prompt. Current implementation doesn't require any
-// specific workflows, but eventually, we'll want to parse
-// some prompt data.
-export type Workflow = BasicImageGenWorkflow | UpscaleImageGenWorkflow;
 
 export interface PromptAndHistoryDataJSON {
   clientId: string;

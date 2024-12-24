@@ -21,14 +21,7 @@ export default [
     name: 'app/rules-to-turn-off',
     files: ['**/*.{ts,mts,tsx,vue}'],
     rules: {
-      'vue/no-unused-vars': [
-        'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
+      'vue/no-unused-vars': ['warn'],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -48,6 +41,9 @@ export default [
           ],
         },
       ],
+      'no-shadow': 'off',
+      '@typescript-eslint/no-shadow': 'warn',
+      'vue/multi-word-component-names': 'off',
     },
   },
 

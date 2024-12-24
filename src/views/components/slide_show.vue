@@ -65,7 +65,7 @@ function keyboardHandler(ev: KeyboardEvent) {
 
 function startSlideshow() {
   stopSlideshow();
-  timeoutRef.value = setTimeout(() => {
+  timeoutRef.value = window.setTimeout(() => {
     nextImage();
   }, 4000);
 }

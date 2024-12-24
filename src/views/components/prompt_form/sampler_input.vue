@@ -1,29 +1,45 @@
 <template>
-  <div class="samplerContainer">
+  <span class="flex flex-row justify-between w-100">
+    <h1 class="text-md font-bold">Sampler</h1>
+
+    <BasicButton @click="toggleShowSamplerCard">
+      <template v-if="showSamplerCard">
+        <XMarkIcon class="h-4 w-4" />
+      </template>
+
+      <template v-else>
+        <PlusIcon class="h-4 w-4" />
+      </template>
+    </BasicButton>
+  </span>
+
+  <div v-if="showSamplerCard" class="samplerContainer">
     <div class="seedLabel">Seed</div>
-    <input
+    <IntForm
       v-model="samplerSeed"
-      :class="inputClasses + ' seedInput'"
       @change="updateSampler"
-      type="number"
+      :inputClasses="inputClasses + ' seedInput'"
+      :step="1"
       placeholder="seed"
     />
 
     <div class="stepsLabel">Steps</div>
-    <input
+    <IntForm
       v-model="samplerSteps"
-      :class="inputClasses + ' stepsInput'"
       @change="updateSampler"
-      type="number"
+      :inputClasses="inputClasses + ' stepsInput'"
+      :min="1"
+      :step="1"
       placeholder="steps"
     />
 
     <div class="cfgLabel">CFG</div>
-    <input
+    <FloatForm
       v-model="samplerCfg"
-      :class="inputClasses + ' cfgInput'"
       @change="updateSampler"
-      type="number"
+      :inputClasses="inputClasses + ' cfgInput'"
+      :step="0.5"
+      :min="0"
       placeholder="cfg"
     />
 
@@ -86,11 +102,12 @@
     </select>
 
     <div class="denoiseLabel">Denoise</div>
-    <input
+    <FloatForm
       v-model="samplerDenoise"
       @change="updateSampler"
-      :class="inputClasses + ' denoiseInput'"
-      type="number"
+      :inputClasses="inputClasses + ' denoiseInput'"
+      :step="0.01"
+      :min="0"
       placeholder="denoise"
     />
   </div>
@@ -98,10 +115,15 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, toRefs, watch } from 'vue';
+import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
 import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import { getSeed } from '@img_gen/utils/get_seed';
 import { isUndefined } from '@img_gen/utils/type_guards';
+
+import IntForm from '@/views/components/int_form.vue';
+import FloatForm from '@/views/components/float_form.vue';
+import BasicButton from '@/views/components/basic_button.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -117,7 +139,6 @@ const props = withDefaults(
 const { inputClasses, samplerInput } = toRefs(props);
 
 watch(samplerInput, (newVal) => {
-  console.log('sampler input changed', newVal);
   if (isUndefined(newVal)) {
     return;
   }
@@ -134,6 +155,8 @@ const emit = defineEmits<{
   (e: 'updateSampler', value: SamplerData): void;
 }>();
 
+const showSamplerCard = ref(false);
+
 const samplerSeed = ref(1);
 const samplerSteps = ref(25);
 const samplerCfg = ref(5);
@@ -146,6 +169,10 @@ onBeforeMount(() => {
     beforeMountHandler();
   }
 });
+
+function toggleShowSamplerCard() {
+  showSamplerCard.value = !showSamplerCard.value;
+}
 
 function beforeMountHandler() {
   const si = props.samplerInput;

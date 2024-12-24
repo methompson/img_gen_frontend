@@ -5,7 +5,12 @@ import type { ImageSet, PromptAndImageData } from '@/models/history';
 
 import * as historyApi from '@/api/history';
 import * as modelsApi from '@/api/models';
+import * as sendPromptApi from '@/api/sendPrompt';
 import { arrayToMap } from '@img_gen/utils/array_to_obj';
+import type {
+  Workflow,
+  WorkflowType,
+} from '@img_gen/models/workflows/workflows';
 
 export const useImgGalleryStore = defineStore('imageGallery', () => {
   const promptDataState: Ref<PromptAndImageData[]> = ref([]);
@@ -35,6 +40,10 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     modelsState.value = modelData;
   }
 
+  async function queuePrompt(promptType: WorkflowType, workflow: Workflow) {
+    await sendPromptApi.sendPrompt(promptType, workflow);
+  }
+
   async function addSelectedImage(imageSet: ImageSet) {
     selectedImageState.value.push(imageSet);
   }
@@ -50,10 +59,13 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
   }
 
   return {
+    // Data
     promptData,
     selectedImages,
     selectedImagesMap,
     models,
+    // Functions
+    queuePrompt,
     fetchHistory,
     fetchModels,
     addSelectedImage,
