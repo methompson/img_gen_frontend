@@ -122,7 +122,7 @@ const showUpscaleCard = ref(true);
 
 const upscaleWidth = ref(1024);
 const upscaleHeight = ref(1024);
-const upscaleMultiplierStr = ref('1.5');
+const upscaleMultiplierStr = ref('2');
 
 const samplerData: Ref<SamplerData | undefined> = ref(defaultSamplerData);
 

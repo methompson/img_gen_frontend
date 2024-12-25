@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, toRefs, watch } from 'vue';
+import { computed, onBeforeMount, toRefs } from 'vue';
 
 import type { GetModelsOutput } from '@/api/models';
 

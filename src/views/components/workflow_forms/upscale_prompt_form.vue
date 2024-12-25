@@ -68,9 +68,6 @@ const props = defineProps<{
 const { workflow } = toRefs(props);
 watch(workflow, (newValue) => {
   if (isUndefined(newValue)) {
-    modelInput.value = undefined;
-    latentInput.value = undefined;
-    promptSamplerInput.value = undefined;
     return;
   }
 

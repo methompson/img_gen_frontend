@@ -117,10 +117,6 @@ const batchSize = ref(1);
 
 const currentResSelect = ref('');
 
-onBeforeMount(() => {
-  beforeMountHandler();
-});
-
 watch(latentWidth, () => {
   currentResSelect.value = optionFromRes.value;
 });
@@ -132,13 +128,17 @@ const optionFromRes = computed(() => {
   return `${latentWidth.value}x${latentHeight.value}`;
 });
 
-function toggleShowCheckpointCard() {
-  showImageInputCard.value = !showImageInputCard.value;
-}
+onBeforeMount(() => {
+  beforeMountHandler();
+});
 
 function beforeMountHandler() {
   updateImageInput();
   currentResSelect.value = optionFromRes.value;
+}
+
+function toggleShowCheckpointCard() {
+  showImageInputCard.value = !showImageInputCard.value;
 }
 
 function updateImageInput() {
