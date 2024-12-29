@@ -17,7 +17,7 @@ const buttonClasses = computed(() => {
     'hover:bg-cyan-600',
     'active:bg-cyan-700',
     'text-white',
-    'p-2',
+    'pa-2',
     'rounded-md',
     'disabled:text-gray-400',
     'disabled:bg-gray-200',
@@ -28,7 +28,11 @@ const buttonClasses = computed(() => {
 </script>
 
 <template>
-  <button :class="buttonClasses" :disabled="props.disabled" @click="props.onClick">
+  <button
+    :class="buttonClasses"
+    :disabled="props.disabled"
+    @click="props.onClick"
+  >
     <slot />
   </button>
 </template>

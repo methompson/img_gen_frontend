@@ -23,7 +23,8 @@ export const useAppStore = defineStore('appStore', () => {
   function setMessage(msg: string, type: MessageType, timeout: number) {
     messageState.value = msg;
     messageTypeState.value = type;
-    msgTimeout.value = window.setTimeout(() => clearMessage, timeout);
+
+    msgTimeout.value = window.setTimeout(() => clearMessage(), timeout);
   }
 
   function setErrorMessage(input: SetMessageInput) {

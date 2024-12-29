@@ -1,3 +1,4 @@
+import { getBaseURL } from '@/utils/base_url';
 import { isRecord, isStringArray } from '@img_gen/utils/type_guards';
 
 export interface GetModelsOutput {
@@ -7,7 +8,8 @@ export interface GetModelsOutput {
 }
 
 export async function fetchModels(): Promise<GetModelsOutput> {
-  const response = await fetch('http://localhost:3000/models');
+  const baseUrl = getBaseURL();
+  const response = await fetch(`${baseUrl}/models`);
   const data = await response.json();
 
   if (!isRecord(data)) {

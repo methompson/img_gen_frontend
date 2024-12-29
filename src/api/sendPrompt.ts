@@ -1,9 +1,13 @@
+import {
+  isSendPromptResponse,
+  type SendPromptResponse,
+} from '@img_gen/models/inputs/prompt_models';
 import type { Workflow } from '@img_gen/models/workflows/workflows';
 
 export async function sendPrompt(
   promptType: string,
   prompt: Workflow,
-): Promise<void> {
+): Promise<SendPromptResponse> {
   const body = JSON.stringify({
     workflow: promptType,
     ...prompt,
@@ -18,5 +22,19 @@ export async function sendPrompt(
     body,
   };
 
-  await fetch('http://localhost:3000/sendPrompt', requestOptions);
+  const response = await fetch(
+    'http://localhost:3000/sendPrompt',
+    requestOptions,
+  );
+  const json = await response.json();
+
+  console.log('sendPrompt', json);
+  if (!isSendPromptResponse(json)) {
+    throw new Error('Invalid response');
+  }
+
+  return {
+    prompt_id: json.prompt_id,
+    number: json.number,
+  };
 }

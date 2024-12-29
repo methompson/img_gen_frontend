@@ -45,10 +45,10 @@ import { computed, onBeforeMount, ref, toRefs, watch, type Ref } from 'vue';
 
 import type { GetModelsOutput } from '@/api/models';
 
-import ImageInput from '@/views/components/prompt_form/image_input.vue';
+import ImageInput from '@/views/components/prompt_form/latent_image_form.vue';
 import CheckpointLora from '@/views/components/prompt_form/checkpoint_lora.vue';
 import ClipSamplerForm from '@/views/components/prompt_form/clip_sampler_form.vue';
-import UpscaleInput from '@/views/components/prompt_form/upscale_input.vue';
+import UpscaleInput from '@/views/components/prompt_form/upscale_form.vue';
 
 import type { InputDimensions } from '@/views/components/prompt_form/types';
 

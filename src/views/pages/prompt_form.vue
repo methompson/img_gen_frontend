@@ -1,5 +1,5 @@
 <template>
-  <div class="paneContainer flex flex-row">
+  <div class="paneContainer d-flex flex-row">
     <div class="leftPane">
       <select v-model="workflowType" class="ml-2 mb-2">
         <option :value="WorkflowType.basicImageGen">Basic Image</option>
@@ -20,16 +20,14 @@
       <span class="historyButtonsContainer">
         <div>
           Prompt History
-          <BasicButton @click="refreshHistory">
-            <ArrowPathIcon class="h-6 w-6" />
-          </BasicButton>
+          <v-btn icon="mdi-refresh" @click="refreshHistory" />
         </div>
 
         <template v-for="prompt in sortedPromptHistory" :key="prompt.promptId">
           <div class="flex justify-between mb-2">
             {{ prompt.promptNumber }}
-            <BasicButton @click="loadPrompt(prompt)">Load</BasicButton>
-            <BasicButton @click="deletePrompt(prompt)">Delete</BasicButton>
+            <v-btn @click="loadPrompt(prompt)"> Load </v-btn>
+            <v-btn @click="deletePrompt(prompt)"> Delete </v-btn>
           </div>
         </template>
       </span>
@@ -37,16 +35,16 @@
   </div>
 
   <div class="queueButton bottom-0 sticky py-4">
-    <BasicButton @click="queuePrompt" :disabled="!canQueue"
-      >Queue Prompt</BasicButton
-    >
+    <v-btn @click="queuePrompt" :disabled="!canQueue"> Queue Prompt </v-btn>
+    <!-- <BasicButton @click="queuePrompt" :disabled="!canQueue">
+      Queue Prompt
+    </BasicButton> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { useAppStore } from '@/stores/app_store';
@@ -178,7 +176,12 @@ async function queuePrompt() {
   }
 
   try {
-    await imgGalleryStore.queuePrompt(workflowType.value, workflow.value);
+    const queueResponse = await imgGalleryStore.queuePrompt(
+      workflowType.value,
+      workflow.value,
+    );
+    console.log({ queueResponse });
+    imgGalleryStore.updatePromptId(queueResponse.prompt_id);
     appStore.setSuccessMessage({ message: 'Prompt queued' });
   } catch (e) {
     console.error(e);
@@ -196,7 +199,16 @@ async function refreshHistory() {
   }
 }
 
-async function deletePrompt(prompt: PromptAndImageData) {}
+async function deletePrompt(prompt: PromptAndImageData) {
+  console.log('Delete', prompt);
+  try {
+    await imgGalleryStore.deleteHistoryItems([prompt.promptId]);
+    appStore.setSuccessMessage({ message: 'Prompt deleted' });
+  } catch (e) {
+    console.error(e);
+    appStore.setErrorMessage({ message: 'Error deleting prompt' });
+  }
+}
 </script>
 
 <style scoped>

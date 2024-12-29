@@ -2,16 +2,13 @@
   <div :class="snackbarScreenClasses">
     <div v-if="showSnackbar" :class="snackbarClasses">
       <span>{{ message }}</span>
-      <button @click="clearMessage">
-        <XMarkIcon class="h-6 w-6 text-white" />
-      </button>
+      <v-btn icon="mdi-close" @click="clearMessage" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from 'vue';
-import { XMarkIcon } from '@heroicons/vue/24/solid';
 
 import { useAppStore } from '@/stores/app_store';
 import { isUndefined } from '@img_gen/utils/type_guards';
@@ -40,12 +37,12 @@ const snackbarClasses = computed(() => {
     'snackbar',
     'rounded-md',
     'mb-4',
-    'p-4',
+    'pa-4',
     'mt-3',
-    'flex',
+    'd-flex',
     'flex-row',
-    'justify-between',
-    'items-center',
+    'justify-space-between',
+    'align-center',
     'pointer-events-auto',
   ];
 
@@ -57,17 +54,13 @@ const snackbarClasses = computed(() => {
 const snackbarScreenClasses = computed(() => {
   const classes = [
     'snackbarScreen',
-    'pointer-events-none',
-    'fixed',
     'top-0',
     'right-0',
-    'w-screen',
-    'h-screen',
-    'p-4',
-    'flex',
-    'flex-col',
+    'pa-4',
+    'd-flex',
+    'flex-column',
     'justify-end',
-    'items-center',
+    'align-center',
   ];
 
   return classes.join(' ');
@@ -76,11 +69,14 @@ const snackbarScreenClasses = computed(() => {
 
 <style lang="scss" scoped>
 .snackbar {
-  // background-color: green;
+  pointer-events: auto;
+  width: 75vw;
 }
-
 .snackbarScreen {
   z-index: 1000;
-  // background-color: red;
+  pointer-events: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
 }
 </style>

@@ -20,6 +20,7 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     loras: [],
     upscaleModels: [],
   });
+  const promptIdState = ref('');
 
   const promptData = computed(() => [...promptDataState.value]);
   const selectedImages = computed(() => [...selectedImageState.value]);
@@ -29,6 +30,7 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
   const models: ComputedRef<modelsApi.GetModelsOutput> = computed(() => ({
     ...modelsState.value,
   }));
+  const promptId = computed(() => promptIdState.value);
 
   async function fetchHistory() {
     const history = await historyApi.fetchImages();
@@ -41,7 +43,7 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
   }
 
   async function queuePrompt(promptType: WorkflowType, workflow: Workflow) {
-    await sendPromptApi.sendPrompt(promptType, workflow);
+    return sendPromptApi.sendPrompt(promptType, workflow);
   }
 
   async function addSelectedImage(imageSet: ImageSet) {
@@ -58,18 +60,30 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     );
   }
 
+  async function deleteHistoryItems(imageIds: string[]) {
+    await historyApi.deleteHistoryItems(imageIds);
+    await fetchHistory();
+  }
+
+  function updatePromptId(id: string) {
+    promptIdState.value = id;
+  }
+
   return {
     // Data
     promptData,
     selectedImages,
     selectedImagesMap,
     models,
+    promptId,
     // Functions
+    deleteHistoryItems,
     queuePrompt,
     fetchHistory,
     fetchModels,
     addSelectedImage,
     clearSelectedImages,
     removeSelectedImage,
+    updatePromptId,
   };
 });

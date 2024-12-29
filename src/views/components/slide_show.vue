@@ -1,3 +1,24 @@
+<template>
+  <div class="slideshowContainer bg-slate-800">
+    <div class="slideshowHeader bg-slate-900 text-slate-400 pa-4">
+      Slide Show
+      <span>
+        <v-btn
+          icon="mdi-play"
+          v-if="isNullOrUndefined(timeoutRef)"
+          @click="startSlideshow"
+        />
+        <v-btn icon="mdi-stop" v-else @click="stopSlideshow" />
+        <v-btn icon="mdi-close" @click="emit('close')" />
+      </span>
+    </div>
+
+    <div class="imageContainer">
+      <img class="img" :src="currentImage" />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import {
   computed,
@@ -7,7 +28,6 @@ import {
   toRefs,
   type Ref,
 } from 'vue';
-import { PlayIcon, StopIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
 import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
 
@@ -91,29 +111,6 @@ onUnmounted(() => {
   window.removeEventListener('keyup', keyboardHandler);
 });
 </script>
-
-<template>
-  <div class="slideshowContainer bg-slate-800">
-    <div class="slideshowHeader bg-slate-900 text-slate-400 p-4">
-      Slide Show
-      <span>
-        <button v-if="isNullOrUndefined(timeoutRef)" @click="startSlideshow">
-          <PlayIcon class="h-6 w-6" />
-        </button>
-        <button v-else @click="stopSlideshow">
-          <StopIcon class="h-6 w-6" />
-        </button>
-        <button @click="emit('close')">
-          <XMarkIcon class="h-6 w-6" />
-        </button>
-      </span>
-    </div>
-
-    <div class="imageContainer">
-      <img class="img" :src="currentImage" />
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .slideshowHeader {

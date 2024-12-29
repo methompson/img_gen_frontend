@@ -54,7 +54,7 @@ function getImageClasses(imageSet: ImageSet) {
 </script>
 
 <template>
-  <div class="outline m-4 p-2">
+  <div class="outline ma-4 pa-2">
     <h2>{{ prompt.promptNumber }}</h2>
     <p>Positive: {{ prompt.positivePrompt }}</p>
     <p>Negative: {{ prompt.negativePrompt }}</p>

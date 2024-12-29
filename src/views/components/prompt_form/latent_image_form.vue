@@ -1,71 +1,65 @@
 <template>
-  <span class="flex flex-row justify-between w-100">
-    <h1 class="text-lg font-bold">Image & Batch Size</h1>
+  <VExpansionPanels>
+    <VExpansionPanel>
+      <VExpansionPanelTitle> Image & Batch Size </VExpansionPanelTitle>
 
-    <BasicButton @click="toggleShowCheckpointCard">
-      <template v-if="showImageInputCard">
-        <XMarkIcon class="h-4 w-4" />
-      </template>
-      <template v-else>
-        <PlusIcon class="h-4 w-4" />
-      </template>
-    </BasicButton>
-  </span>
+      <VExpansionPanelText>
+        <div class="latentImageInputContainer">
+          <span class="resSelectLabel">Presets</span>
+          <span class="resSelect">
+            <select
+              class="rounded-md pa-2 my-2"
+              v-model="currentResSelect"
+              @click="resSelectClickHandler"
+              @input="resSelectInputHandler"
+            >
+              <option value=""></option>
+              <option value="512x512">512x512</option>
+              <option value="768x512">768x512</option>
+              <option value="512x768">512x768</option>
+              <option value="1024x1024">1024x1024</option>
+              <option value="1536x1024">1536x1024</option>
+              <option value="1024x1536">1024x1536</option>
+            </select>
+          </span>
 
-  <div v-if="showImageInputCard" class="latentImageInputContainer">
-    <span class="resSelectLabel">Presets</span>
-    <span class="resSelect">
-      <select
-        class="rounded-md p-2 my-2"
-        v-model="currentResSelect"
-        @click="resSelectClickHandler"
-        @input="resSelectInputHandler"
-      >
-        <option value=""></option>
-        <option value="512x512">512x512</option>
-        <option value="768x512">768x512</option>
-        <option value="512x768">512x768</option>
-        <option value="1024x1024">1024x1024</option>
-        <option value="1536x1024">1536x1024</option>
-        <option value="1024x1536">1024x1536</option>
-      </select>
-    </span>
+          <span class="latentWidthLabel">Width</span>
+          <IntForm
+            v-model="latentWidth"
+            @input="updateImageInput"
+            :class="inputClasses + ' latentWidthInput'"
+            :min="1"
+            :step="1"
+            placeholder="Latent Width"
+          />
 
-    <span class="latentWidthLabel">Width</span>
-    <IntForm
-      v-model="latentWidth"
-      @input="updateImageInput"
-      :class="inputClasses + ' latentWidthInput'"
-      :min="1"
-      :step="1"
-      placeholder="Latent Width"
-    />
+          <span class="latentHeightLabel">Height</span>
+          <IntForm
+            v-model="latentHeight"
+            @input="updateImageInput"
+            :class="inputClasses + ' latentHeightInput'"
+            :min="1"
+            :step="1"
+            placeholder="Latent Height"
+          />
 
-    <span class="latentHeightLabel">Height</span>
-    <IntForm
-      v-model="latentHeight"
-      @input="updateImageInput"
-      :class="inputClasses + ' latentHeightInput'"
-      :min="1"
-      :step="1"
-      placeholder="Latent Height"
-    />
-
-    <span class="batchSizeLabel">Batch Size</span>
-    <IntForm
-      v-model="batchSize"
-      @input="updateImageInput"
-      :inputClasses="inputClasses + ' batchSizeInput'"
-      :step="1"
-      :min="1"
-      placeholder="Batch Size"
-    />
-  </div>
+          <span class="batchSizeLabel">Batch Size</span>
+          <IntForm
+            v-model="batchSize"
+            @input="updateImageInput"
+            :inputClasses="inputClasses + ' batchSizeInput'"
+            :step="1"
+            :min="1"
+            placeholder="Batch Size"
+          />
+        </div>
+      </VExpansionPanelText>
+    </VExpansionPanel>
+  </VExpansionPanels>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, toRefs, watch } from 'vue';
-import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
 import {
   isLatentImagePrompt,
@@ -73,7 +67,6 @@ import {
 } from '@img_gen/models/inputs/latent_image_input';
 import { isUndefined } from '@img_gen/utils/type_guards';
 
-import BasicButton from '@/views/components/basic_button.vue';
 import IntForm from '@/views/components/int_form.vue';
 
 const props = withDefaults(
@@ -109,8 +102,6 @@ const emit = defineEmits<{
   (e: 'updateImageInput', input: LatentImagePrompt | undefined): void;
 }>();
 
-const showImageInputCard = ref(true);
-
 const latentWidth = ref(512);
 const latentHeight = ref(512);
 const batchSize = ref(1);
@@ -135,10 +126,6 @@ onBeforeMount(() => {
 function beforeMountHandler() {
   updateImageInput();
   currentResSelect.value = optionFromRes.value;
-}
-
-function toggleShowCheckpointCard() {
-  showImageInputCard.value = !showImageInputCard.value;
 }
 
 function updateImageInput() {

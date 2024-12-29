@@ -1,79 +1,71 @@
 <template>
-  <span class="flex flex-row justify-between w-100">
-    <h1 class="text-lg font-bold">Upscale</h1>
+  <VExpansionPanels>
+    <VExpansionPanel>
+      <VExpansionPanelTitle> Upscale </VExpansionPanelTitle>
 
-    <BasicButton @click="toggleUpscaleCard">
-      <template v-if="showUpscaleCard">
-        <XMarkIcon class="h-4 w-4" />
-      </template>
+      <VExpansionPanelText>
+        <span>
+          <div class="upscaleInputContainer">
+            <span class="upscaleMultiplierLabel">Multiplier</span>
+            <span class="upscaleMultiplier">
+              <select
+                class="rounded-md pa-2 my-2"
+                v-model="upscaleMultiplierStr"
+                @input="updateUpscaleInput"
+              >
+                <option value=""></option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+                <option value="2.5">2.5x</option>
+                <option value="3">3x</option>
+                <option value="3.5">3.5x</option>
+                <option value="4">4x</option>
+              </select>
+            </span>
 
-      <template v-else>
-        <PlusIcon class="h-4 w-4" />
-      </template>
-    </BasicButton>
-  </span>
+            <span class="upscaleWidthLabel">Width</span>
+            <IntForm
+              v-model="upscaleWidth"
+              @input="updateUpscaleInput"
+              :inputClasses="inputClasses + ' upscaleWidthInput'"
+              :step="1"
+              :min="1"
+              placeholder="Upscale Width"
+            />
 
-  <span v-if="showUpscaleCard">
-    <div class="upscaleInputContainer">
-      <span class="upscaleMultiplierLabel">Multiplier</span>
-      <span class="upscaleMultiplier">
-        <select
-          class="rounded-md p-2 my-2"
-          v-model="upscaleMultiplierStr"
-          @input="updateUpscaleInput"
-        >
-          <option value=""></option>
-          <option value="1.25">1.25x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-          <option value="2.5">2.5x</option>
-          <option value="3">3x</option>
-          <option value="3.5">3.5x</option>
-          <option value="4">4x</option>
-        </select>
-      </span>
+            <span class="upscaleHeightLabel">Height</span>
+            <IntForm
+              v-model="upscaleHeight"
+              @input="updateUpscaleInput"
+              :inputClasses="inputClasses + ' upscaleHeightInput'"
+              :step="1"
+              :min="1"
+              placeholder="Upscale Height"
+            />
+          </div>
 
-      <span class="upscaleWidthLabel">Width</span>
-      <IntForm
-        v-model="upscaleWidth"
-        @input="updateUpscaleInput"
-        :inputClasses="inputClasses + ' upscaleWidthInput'"
-        :step="1"
-        :min="1"
-        placeholder="Upscale Width"
-      />
-
-      <span class="upscaleHeightLabel">Height</span>
-      <IntForm
-        v-model="upscaleHeight"
-        @input="updateUpscaleInput"
-        :inputClasses="inputClasses + ' upscaleHeightInput'"
-        :step="1"
-        :min="1"
-        placeholder="Upscale Height"
-      />
-    </div>
-
-    <SamplerInput
-      :inputClasses="inputClasses"
-      :samplerInput="samplerData"
-      @updateSampler="updateImageSampler"
-    />
-  </span>
+          <SamplerInput
+            :inputClasses="inputClasses"
+            :samplerInput="samplerData"
+            @updateSampler="updateImageSampler"
+          />
+        </span>
+      </VExpansionPanelText>
+    </VExpansionPanel>
+  </VExpansionPanels>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, toRefs, watch, type Ref } from 'vue';
-import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
 import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
 import { getDefaultUpscaleSamplerData, type InputDimensions } from './types';
 import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
-import SamplerInput from '@/views/components/prompt_form/sampler_input.vue';
+import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
 import IntForm from '@/views/components/int_form.vue';
-import BasicButton from '@/views/components/basic_button.vue';
 
 const defaultSamplerData = getDefaultUpscaleSamplerData();
 
@@ -117,8 +109,6 @@ watch(upscaleInput, (newVal) => {
 watch(inputDimensions, () => {
   setDimensionsFromMultiplier();
 });
-
-const showUpscaleCard = ref(true);
 
 const upscaleWidth = ref(1024);
 const upscaleHeight = ref(1024);
@@ -199,10 +189,6 @@ function beforeMountHandler() {
 
 function updateMultiplierFromDimensions() {
   upscaleMultiplierStr.value = optionFromRes.value;
-}
-
-function toggleUpscaleCard() {
-  showUpscaleCard.value = !showUpscaleCard.value;
 }
 
 function updateImageSampler(sampler: SamplerData) {

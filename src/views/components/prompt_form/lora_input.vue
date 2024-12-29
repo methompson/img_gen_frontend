@@ -1,8 +1,6 @@
 <template>
-  <div class="flex items-center border-2 pl-2">
-    <BasicButton @click="removeLora()">
-      <MinusIcon class="h-4 w-4" />
-    </BasicButton>
+  <div class="d-flex align-center border-2 pl-2">
+    <v-btn icon="mdi-minus" @click="removeLora" />
 
     <div class="loraContainer">
       <select
@@ -38,12 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, toRefs, watch } from 'vue';
-import { MinusIcon } from '@heroicons/vue/24/solid';
+import { onBeforeMount, ref, toRefs } from 'vue';
 
 import type { PromptLoraInput } from './types';
-
-import BasicButton from '@/views/components/basic_button.vue';
 
 const props = withDefaults(
   defineProps<{
