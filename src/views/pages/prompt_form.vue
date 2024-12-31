@@ -1,12 +1,12 @@
 <template>
   <div class="paneContainer d-flex flex-row">
     <div class="leftPane">
-      <select v-model="workflowType" class="ml-2 mb-2">
-        <option :value="WorkflowType.basicImageGen">Basic Image</option>
-        <option :value="WorkflowType.upscaleImageGen">
-          Basic Image with Upscale
-        </option>
-      </select>
+      <v-select
+        v-model="workflowType"
+        :items="workflowTypes"
+        variant="solo"
+        class="mx-2"
+      />
 
       <PromptInputs
         :models="models"
@@ -50,7 +50,6 @@ import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { useAppStore } from '@/stores/app_store';
 import type { PromptAndImageData } from '@/models/history';
 
-import BasicButton from '@/views/components/basic_button.vue';
 import PromptInputs from '@/views/components/prompt_inputs.vue';
 import {
   isBasicImageGenWorkflow,
@@ -78,6 +77,10 @@ const workflow: Ref<
 > = ref(undefined);
 
 const workflowType = ref(WorkflowType.upscaleImageGen);
+const workflowTypes = [
+  { title: 'Basic Image', value: WorkflowType.basicImageGen },
+  { title: 'Basic Image with Upscale', value: WorkflowType.upscaleImageGen },
+];
 
 const canQueue = computed(() => {
   return !isUndefined(workflow.value);
@@ -233,5 +236,9 @@ async function deletePrompt(prompt: PromptAndImageData) {
 <style>
 .errorCard {
   border: 1px solid #dc2626 !important;
+}
+
+.formCard {
+  margin-bottom: 1rem;
 }
 </style>

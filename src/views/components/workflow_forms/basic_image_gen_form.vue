@@ -1,8 +1,8 @@
 <template>
   <div class="mx-2">
-    <!-- PromptModels Input -->
-    <div :class="promptModelsClasses">
-      <CheckpointLora
+    <!-- Checkpoint & Lora Form -->
+    <div class="formCard">
+      <CheckpointLoraForm
         :models="models"
         :inputClasses="inputClasses"
         :modelInput="modelInput"
@@ -10,17 +10,17 @@
       />
     </div>
 
-    <!-- Image Input -->
-    <div :class="latentImageClasses">
-      <ImageInput
+    <!-- Latent Image Form -->
+    <div class="formCard">
+      <LatentImageForm
         :inputClasses="inputClasses"
         :latentInput="latentInput"
         @updateImageInput="updateImageInput"
       />
     </div>
 
-    <!-- PromptSamplerInput -->
-    <div :class="clipSamplerClasses">
+    <!-- Clip & Sampler Form -->
+    <div class="formCard">
       <ClipSamplerForm
         :inputClasses="inputClasses"
         :promptSamplerInput="promptSamplerInput"
@@ -31,12 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, toRefs, watch, type Ref } from 'vue';
+import { onBeforeMount, ref, toRefs, watch, type Ref } from 'vue';
 
 import type { GetModelsOutput } from '@/api/models';
 
-import ImageInput from '@/views/components/prompt_form/latent_image_form.vue';
-import CheckpointLora from '@/views/components/prompt_form/checkpoint_lora.vue';
+import LatentImageForm from '@/views/components/prompt_form/latent_image_form.vue';
+import CheckpointLoraForm from '@/views/components/prompt_form/checkpoint_lora_form.vue';
 import ClipSamplerForm from '@/views/components/prompt_form/clip_sampler_form.vue';
 
 import type { LatentImagePrompt } from '@img_gen/models/inputs/latent_image_input';
@@ -92,33 +92,6 @@ onBeforeMount(() => {
   beforeMountHandler();
 });
 
-const promptModelsClasses = computed(() => {
-  const classes = ['promptModelsInput'];
-  if (isUndefined(modelInput.value)) {
-    classes.push('errorCard');
-  }
-
-  return classes.join(' ');
-});
-
-const latentImageClasses = computed(() => {
-  const classes = ['latentImageInput'];
-  if (isUndefined(latentInput.value)) {
-    classes.push('errorCard');
-  }
-
-  return classes.join(' ');
-});
-
-const clipSamplerClasses = computed(() => {
-  const classes = ['clipSamplerInput'];
-  if (isUndefined(promptSamplerInput.value)) {
-    classes.push('errorCard');
-  }
-
-  return classes.join(' ');
-});
-
 function beforeMountHandler() {
   updateWorkflow();
 }
@@ -158,14 +131,3 @@ function updateWorkflow() {
   });
 }
 </script>
-
-<style lang="scss" scoped>
-.promptModelsInput,
-.latentImageInput,
-.clipSamplerInput,
-.upscaleInput {
-  border: 1px solid #d1d5db;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-</style>

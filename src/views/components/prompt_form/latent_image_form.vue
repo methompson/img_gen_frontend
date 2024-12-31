@@ -1,33 +1,27 @@
 <template>
   <VExpansionPanels>
-    <VExpansionPanel>
+    <VExpansionPanel :class="expansionClasses">
       <VExpansionPanelTitle> Image & Batch Size </VExpansionPanelTitle>
 
       <VExpansionPanelText>
         <div class="latentImageInputContainer">
           <span class="resSelectLabel">Presets</span>
           <span class="resSelect">
-            <select
-              class="rounded-md pa-2 my-2"
+            <VSelect
+              :items="presetResolutions"
+              variant="solo"
+              density="compact"
               v-model="currentResSelect"
-              @click="resSelectClickHandler"
-              @input="resSelectInputHandler"
-            >
-              <option value=""></option>
-              <option value="512x512">512x512</option>
-              <option value="768x512">768x512</option>
-              <option value="512x768">512x768</option>
-              <option value="1024x1024">1024x1024</option>
-              <option value="1536x1024">1536x1024</option>
-              <option value="1024x1536">1024x1536</option>
-            </select>
+              @update:modelValue="updateResolutionFromSelect"
+              :hideDetails="true"
+            />
           </span>
 
           <span class="latentWidthLabel">Width</span>
           <IntForm
             v-model="latentWidth"
             @input="updateImageInput"
-            :class="inputClasses + ' latentWidthInput'"
+            class="latentWidthInput"
             :min="1"
             :step="1"
             placeholder="Latent Width"
@@ -37,7 +31,7 @@
           <IntForm
             v-model="latentHeight"
             @input="updateImageInput"
-            :class="inputClasses + ' latentHeightInput'"
+            class="latentHeightInput"
             :min="1"
             :step="1"
             placeholder="Latent Height"
@@ -47,9 +41,9 @@
           <IntForm
             v-model="batchSize"
             @input="updateImageInput"
-            :inputClasses="inputClasses + ' batchSizeInput'"
-            :step="1"
+            class="batchSizeInput"
             :min="1"
+            :step="1"
             placeholder="Batch Size"
           />
         </div>
@@ -68,6 +62,7 @@ import {
 import { isUndefined } from '@img_gen/utils/type_guards';
 
 import IntForm from '@/views/components/int_form.vue';
+import { arrayToObject } from '@img_gen/utils/array_to_obj';
 
 const props = withDefaults(
   defineProps<{
@@ -108,15 +103,35 @@ const batchSize = ref(1);
 
 const currentResSelect = ref('');
 
-watch(latentWidth, () => {
-  currentResSelect.value = optionFromRes.value;
-});
-watch(latentHeight, () => {
-  currentResSelect.value = optionFromRes.value;
+const presetResolutions = [
+  '',
+  '512x512',
+  '768x512',
+  '512x768',
+  '1024x1024',
+  '1536x1024',
+  '1024x1536',
+];
+
+const presetResolutionObj = arrayToObject(
+  presetResolutions.filter((x) => x !== ''),
+  (x) => x,
+);
+
+watch(latentWidth, updateSelectFromResolution);
+watch(latentHeight, updateSelectFromResolution);
+
+const currentResolutionString = computed(() => {
+  return `${latentWidth.value}x${latentHeight.value}`;
 });
 
-const optionFromRes = computed(() => {
-  return `${latentWidth.value}x${latentHeight.value}`;
+const expansionClasses = computed(() => {
+  const classes = [];
+  if (!latentInput.value) {
+    classes.push('errorCard');
+  }
+
+  return classes.join(' ');
 });
 
 onBeforeMount(() => {
@@ -125,7 +140,7 @@ onBeforeMount(() => {
 
 function beforeMountHandler() {
   updateImageInput();
-  currentResSelect.value = optionFromRes.value;
+  currentResSelect.value = currentResolutionString.value;
 }
 
 function updateImageInput() {
@@ -143,24 +158,15 @@ function updateImageInput() {
   emit('updateImageInput', input);
 }
 
-function resSelectInputHandler(input: Event) {
-  setResFromEv(input.target);
-}
-
-function resSelectClickHandler(input: MouseEvent) {
-  setResFromEv(input.target);
-}
-
-function setResFromEv(target: EventTarget | null) {
-  if (
-    !(target instanceof HTMLSelectElement) &&
-    !(target instanceof HTMLOptionElement)
-  ) {
-    return;
+function updateSelectFromResolution() {
+  if (presetResolutionObj[currentResolutionString.value]) {
+    currentResSelect.value = currentResolutionString.value;
+  } else {
+    currentResSelect.value = '';
   }
+}
 
-  const value = target.value;
-
+function updateResolutionFromSelect(value: string) {
   const [width, height] = value.split('x').map((x) => parseInt(x, 10));
   if (width && height) {
     latentWidth.value = width;
@@ -221,5 +227,12 @@ function setResFromEv(target: EventTarget | null) {
 .latentHeightInput,
 .batchSizeInput {
   width: 10em;
+}
+
+.latentWidthInput,
+.latentHeightInput,
+.batchSizeInput,
+.resSelect {
+  margin-bottom: 0.5em;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <VExpansionPanels>
-    <VExpansionPanel>
+    <VExpansionPanel :class="expansionClasses">
       <VExpansionPanelTitle> Upscale </VExpansionPanelTitle>
 
       <VExpansionPanelText>
@@ -65,7 +65,7 @@ import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
 import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
-import IntForm from '@/views/components/int_form.vue';
+import IntForm from '@/views/components/int_form_old.vue';
 
 const defaultSamplerData = getDefaultUpscaleSamplerData();
 
@@ -169,6 +169,15 @@ const upscaleMultiplier = computed(() => {
 });
 watch(upscaleMultiplier, () => {
   setDimensionsFromMultiplier();
+});
+
+const expansionClasses = computed(() => {
+  const classes = [];
+  if (!upscaleInput.value) {
+    classes.push('errorCard');
+  }
+
+  return classes.join(' ');
 });
 
 onBeforeMount(() => {

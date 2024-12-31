@@ -1,6 +1,6 @@
 <template>
   <VExpansionPanels>
-    <VExpansionPanel>
+    <VExpansionPanel :class="expansionClasses">
       <VExpansionPanelTitle> Checkpoint & Loras </VExpansionPanelTitle>
 
       <VExpansionPanelText>
@@ -49,11 +49,16 @@ import type { PromptLoraInput } from './types';
 import { isUndefined } from '@img_gen/utils/type_guards';
 import { arrayToObject } from '@img_gen/utils/array_to_obj';
 
-const props = defineProps<{
-  models: GetModelsOutput;
-  inputClasses: string;
-  modelInput?: PromptModels;
-}>();
+const props = withDefaults(
+  defineProps<{
+    models: GetModelsOutput;
+    inputClasses?: string;
+    modelInput?: PromptModels;
+  }>(),
+  {
+    inputClasses: '',
+  },
+);
 
 const { modelInput, models } = toRefs(props);
 watch(modelInput, (newVal) => {
@@ -124,6 +129,15 @@ const loras = computed(() => {
 const nextLoraPosition = computed(() => {
   const positions = loras.value.map((lora) => lora.position);
   return Math.max(...positions, 0) + 1;
+});
+
+const expansionClasses = computed(() => {
+  const classes = [];
+  if (!modelInput.value) {
+    classes.push('errorCard');
+  }
+
+  return classes.join(' ');
 });
 
 function addLora() {

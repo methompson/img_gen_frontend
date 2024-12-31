@@ -1,6 +1,6 @@
 <template>
   <VExpansionPanels>
-    <VExpansionPanel>
+    <VExpansionPanel :class="expansionClasses">
       <VExpansionPanelTitle> Clip & Sampler </VExpansionPanelTitle>
 
       <VExpansionPanelText>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, type Ref, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeMount, type Ref, ref, toRefs, watch } from 'vue';
 
 import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import type { PromptSampler } from '@img_gen/models/inputs/prompt_sampler';
@@ -91,6 +91,15 @@ const textAreaSize = {
 const positivePrompt = ref('');
 const negativePrompt = ref('');
 const samplerData: Ref<SamplerData | undefined> = ref(undefined);
+
+const expansionClasses = computed(() => {
+  const classes = [];
+  if (!promptSamplerInput.value) {
+    classes.push('errorCard');
+  }
+
+  return classes.join(' ');
+});
 
 onBeforeMount(() => {
   beforeMountHandler();
