@@ -3,32 +3,32 @@
     <v-btn icon="mdi-minus" @click="removeLora" />
 
     <div class="loraContainer">
-      <select
+      <VSelect
+        :items="loraNames"
         v-model="modelName"
-        :class="inputClasses + ' loraModelSelect'"
-        @change="updateLora"
-      >
-        <option v-for="loraName in loraNames" :key="`${lora.id}_${loraName}`">
-          {{ loraName }}
-        </option>
-      </select>
+        @update:modelValue="updateLora"
+        density="compact"
+        variant="solo"
+        class="loraModelSelect mx-2"
+      />
 
       <span class="loraStrengthModelTitle"> Strength Model </span>
-      <input
+      <FloatInput
         v-model="strengthModel"
-        @change="updateLora"
-        :class="inputClasses + ' loraStrengthModelInput'"
-        size="2"
-        type="number"
+        @update:modelValue="updateLora"
+        class="loraStrengthModelInput"
+        :min="0"
+        :step="0.1"
         placeholder="Strength Model"
       />
 
       <span class="loraStrengthClipTitle"> Strength Clip </span>
-      <input
+      <FloatInput
         v-model="strengthClip"
-        @change="updateLora"
-        :class="inputClasses + ' loraStrengthClipInput'"
-        type="number"
+        @update:modelValue="updateLora"
+        class="loraStrengthClipInput"
+        :min="0"
+        :step="0.1"
         placeholder="Strength Clip"
       />
     </div>
@@ -39,6 +39,8 @@
 import { onBeforeMount, ref, toRefs } from 'vue';
 
 import type { PromptLoraInput } from './types';
+
+import FloatInput from '@/views/components/float_input.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -65,6 +67,7 @@ const strengthModel = ref(1);
 const strengthClip = ref(1);
 
 onBeforeMount(() => {
+  console.log('lora rendered', lora.value.id);
   if (!props.testing) {
     beforeMountHandler();
   }
@@ -100,7 +103,10 @@ function updateLora() {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto;
-  grid-template-areas: 'model model' 'modelName modelInput' 'clipName clipInput';
+  grid-template-areas:
+    'model model'
+    'modelName modelInput'
+    'clipName clipInput';
 }
 
 .loraModelSelect {
@@ -126,11 +132,14 @@ function updateLora() {
 .loraStrengthModelTitle,
 .loraStrengthClipTitle {
   margin-right: 1em;
+  display: flex;
+  align-items: center;
 }
 
 .loraStrengthModelInput,
 .loraStrengthClipInput {
-  width: 3em;
+  width: 10em;
   text-align: center;
+  margin-bottom: 0.5em;
 }
 </style>

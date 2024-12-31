@@ -20,7 +20,7 @@
           <span class="latentWidthLabel">Width</span>
           <IntForm
             v-model="latentWidth"
-            @input="updateImageInput"
+            @update:modelValue="updateImageInput"
             class="latentWidthInput"
             :min="1"
             :step="1"
@@ -30,7 +30,7 @@
           <span class="latentHeightLabel">Height</span>
           <IntForm
             v-model="latentHeight"
-            @input="updateImageInput"
+            @update:modelValue="updateImageInput"
             class="latentHeightInput"
             :min="1"
             :step="1"
@@ -40,7 +40,7 @@
           <span class="batchSizeLabel">Batch Size</span>
           <IntForm
             v-model="batchSize"
-            @input="updateImageInput"
+            @update:modelValue="updateImageInput"
             class="batchSizeInput"
             :min="1"
             :step="1"
@@ -61,7 +61,7 @@ import {
 } from '@img_gen/models/inputs/latent_image_input';
 import { isUndefined } from '@img_gen/utils/type_guards';
 
-import IntForm from '@/views/components/int_form.vue';
+import IntForm from '@/views/components/int_input.vue';
 import { arrayToObject } from '@img_gen/utils/array_to_obj';
 
 const props = withDefaults(

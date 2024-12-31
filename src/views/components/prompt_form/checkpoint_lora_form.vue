@@ -6,15 +6,13 @@
       <VExpansionPanelText>
         <div>Checkpoint</div>
 
-        <select
+        <VSelect
           v-model="checkpoint"
-          @change="updateModelInput"
-          :class="inputClasses + ' w-full'"
-        >
-          <option v-for="model in models.models" :key="model">
-            {{ model }}
-          </option>
-        </select>
+          @update:modelValue="updateModelInput"
+          :items="checkpointModels"
+          variant="solo"
+          class="mx-2"
+        />
 
         <div>LORAs</div>
 
@@ -38,7 +36,7 @@
 import { computed, ref, toRefs, watch, type ComputedRef, type Ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
-import LoraInput from '@/views/components/prompt_form/lora_input.vue';
+import LoraInput from '@/views/components/prompt_form/lora_form.vue';
 
 import type { GetModelsOutput } from '@/api/models';
 import type {
@@ -63,6 +61,7 @@ const props = withDefaults(
 const { modelInput, models } = toRefs(props);
 watch(modelInput, (newVal) => {
   if (isUndefined(newVal)) {
+    prevModelInput.value = undefined;
     return;
   }
 
@@ -70,30 +69,36 @@ watch(modelInput, (newVal) => {
     checkpoint.value = newVal.checkpointName;
   }
 
-  if (JSON.stringify(addedLoras.value) === JSON.stringify(newVal.loras)) {
-    return;
+  if (
+    JSON.stringify(prevModelInput.value?.loras) !== JSON.stringify(newVal.loras)
+  ) {
+    let i = 1;
+    addedLoras.value = arrayToObject(
+      newVal.loras.map((lora) => ({
+        id: uuidv4(),
+        name: lora.name,
+        strengthModel: lora.strengthModel,
+        strengthClip: lora.strengthClip,
+        position: i++,
+      })),
+      (l) => l.id,
+    );
   }
 
-  // TODO - Check what or if things changed?
-  let i = 1;
-  addedLoras.value = arrayToObject(
-    newVal.loras.map((lora) => ({
-      id: uuidv4(),
-      name: lora.name,
-      strengthModel: lora.strengthModel,
-      strengthClip: lora.strengthClip,
-      position: i++,
-    })),
-    (l) => l.id,
-  );
+  prevModelInput.value = newVal;
 });
 
 const emit = defineEmits<{
   (e: 'updateModelInput', input: PromptModels | undefined): void;
 }>();
 
+const checkpointModels = computed(() => {
+  return [...models.value.models];
+});
+
 const addedLoras: Ref<Record<string, PromptLoraInput>> = ref({});
 const checkpoint = ref('');
+const prevModelInput = ref<PromptModels | undefined>(undefined);
 
 const computedModelInput: ComputedRef<PromptModels | undefined> = computed(
   () => {
@@ -164,6 +169,7 @@ function updateLora(lora: PromptLoraInput, update: boolean = true) {
 }
 
 function updateModelInput() {
+  prevModelInput.value = computedModelInput.value;
   emit('updateModelInput', computedModelInput.value);
 }
 </script>

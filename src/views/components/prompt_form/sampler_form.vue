@@ -117,7 +117,7 @@ import { getSeed } from '@img_gen/utils/get_seed';
 import { isUndefined } from '@img_gen/utils/type_guards';
 
 import IntForm from '@/views/components/int_form_old.vue';
-import FloatForm from '@/views/components/float_form.vue';
+import FloatForm from '@/views/components/float_form_old.vue';
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { storeToRefs } from 'pinia';
 

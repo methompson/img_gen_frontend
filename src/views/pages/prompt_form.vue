@@ -1,9 +1,10 @@
 <template>
   <div class="paneContainer d-flex flex-row">
     <div class="leftPane">
-      <v-select
+      <VSelect
         v-model="workflowType"
         :items="workflowTypes"
+        density="compact"
         variant="solo"
         class="mx-2"
       />

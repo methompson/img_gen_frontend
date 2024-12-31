@@ -4,11 +4,10 @@ import { computed } from 'vue';
 
 import TopBar from '@/views/components/top_bar.vue';
 import SnackBar from '@/views/components/snackbar.vue';
+import ThemeView from '@/views/components/theme_view.vue';
 
 const appClasses = computed(() => {
   const classes = [
-    'bg-white',
-    'dark:bg-slate-800',
     'overflow-hidden',
     'text-slate-500',
     'dark:text-slate-400',
@@ -26,5 +25,6 @@ const appClasses = computed(() => {
     <TopBar />
     <RouterView />
     <SnackBar />
+    <ThemeView />
   </div>
 </template>
