@@ -1,7 +1,9 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle> Checkpoint & Loras </VExpansionPanelTitle>
+      <VExpansionPanelTitle>
+        Checkpoint & Loras {{ additionalInfo }}</VExpansionPanelTitle
+      >
 
       <VExpansionPanelText>
         <div>Checkpoint</div>
@@ -22,7 +24,6 @@
           <LoraInput
             :loraNames="loraNames"
             :lora="lora"
-            :inputClasses="inputClasses"
             @removeLora="removeLora"
             @updateLora="updateLora"
           />
@@ -47,16 +48,10 @@ import type { PromptLoraInput } from './types';
 import { isUndefined } from '@img_gen/utils/type_guards';
 import { arrayToObject } from '@img_gen/utils/array_to_obj';
 
-const props = withDefaults(
-  defineProps<{
-    models: GetModelsOutput;
-    inputClasses?: string;
-    modelInput?: PromptModels;
-  }>(),
-  {
-    inputClasses: '',
-  },
-);
+const props = defineProps<{
+  models: GetModelsOutput;
+  modelInput?: PromptModels;
+}>();
 
 const { modelInput, models } = toRefs(props);
 watch(modelInput, (newVal) => {
@@ -94,6 +89,23 @@ const emit = defineEmits<{
 
 const checkpointModels = computed(() => {
   return [...models.value.models];
+});
+
+const additionalInfo = computed(() => {
+  const cpt = checkpoint.value;
+  const loras = addedLoras.value;
+
+  if (!cpt) {
+    return '';
+  }
+
+  const totalLoras = Object.keys(loras).length;
+  let loraStr = '';
+  if (totalLoras > 0) {
+    loraStr = ` + ${totalLoras} LORAs`;
+  }
+
+  return ` - ${cpt}${loraStr}`;
 });
 
 const addedLoras: Ref<Record<string, PromptLoraInput>> = ref({});

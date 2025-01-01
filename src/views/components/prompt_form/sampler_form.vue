@@ -44,44 +44,6 @@
             class="samplerInput"
             :hide-details="true"
           />
-          <!-- <select
-            v-model="samplerName"
-            @change="updateSampler"
-            :class="inputClasses + ' samplerInput'"
-          >
-            <option value="euler">euler</option>
-            <option value="euler_cfg_pp">euler_cfg_pp</option>
-            <option value="euler_ancestral">euler_ancestral</option>
-            <option value="euler_ancestral_cfg_pp">
-              euler_ancestral_cfg_pp
-            </option>
-            <option value="heun">heun</option>
-            <option value="heunpp2">heunpp2</option>
-            <option value="dpm_2">dpm_2</option>
-            <option value="dpm_2_ancestral">dpm_2_ancestral</option>
-            <option value="dpm_fast">dpm_fast</option>
-            <option value="dpm_adaptive">dpm_adaptive</option>
-            <option value="dpmpp_2s_ancestral">dpmpp_2s_ancestral</option>
-            <option value="dpmpp_2s_ancestral_cfg_pp">
-              dpmpp_2s_ancestral_cfg_pp
-            </option>
-            <option value="dpmpp_sde">dpmpp_sde</option>
-            <option value="dpmpp_sde_gpu">dpmpp_sde_gpu</option>
-            <option value="dpmpp_2m">dpmpp_2m</option>
-            <option value="dpmpp_2m_cfg_pp">dpmpp_2m_cfg_pp</option>
-            <option value="dpmpp_2m_sde">dpmpp_2m_sde</option>
-            <option value="dpmpp_2m_sde_gpu">dpmpp_2m_sde_gpu</option>
-            <option value="dpmpp_3m_sde">dpmpp_3m_sde</option>
-            <option value="dpmpp_3m_sde_gpu">dpmpp_3m_sde_gpu</option>
-            <option value="ddpm">ddpm</option>
-            <option value="lcm">lcm</option>
-            <option value="ipndm">ipndm</option>
-            <option value="ipndm_v">ipndm_v</option>
-            <option value="deis">deis</option>
-            <option value="ddim">ddim</option>
-            <option value="uni_pc">uni_pc</option>
-            <option value="uni_pc_bh2">uni_pc_bh2</option>
-          </select> -->
 
           <div class="schedulerLabel">Scheduler</div>
           <VSelect
@@ -173,20 +135,20 @@ const { promptId } = storeToRefs(imgGalleryStore);
 
 watch(promptId, () => {
   samplerSeed.value = getSeed();
+  updateSampler();
 });
 
 const props = withDefaults(
   defineProps<{
     testing?: boolean;
     samplerInput?: SamplerData;
-    inputClasses: string;
   }>(),
   {
     testing: false,
   },
 );
 
-const { inputClasses, samplerInput } = toRefs(props);
+const { samplerInput } = toRefs(props);
 
 watch(samplerInput, (newVal) => {
   if (isUndefined(newVal)) {
@@ -233,14 +195,6 @@ function beforeMountHandler() {
 }
 
 function updateSampler() {
-  console.log('updateSampler', {
-    seed: samplerSeed.value,
-    steps: samplerSteps.value,
-    cfg: samplerCfg.value,
-    samplerName: samplerName.value,
-    scheduler: samplerScheduler.value,
-    denoise: samplerDenoise.value,
-  });
   emit('updateSampler', {
     seed: samplerSeed.value,
     steps: samplerSteps.value,

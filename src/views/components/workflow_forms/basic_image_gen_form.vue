@@ -4,7 +4,6 @@
     <div class="formCard">
       <CheckpointLoraForm
         :models="models"
-        :inputClasses="inputClasses"
         :modelInput="modelInput"
         @updateModelInput="updateModelInput"
       />
@@ -13,7 +12,6 @@
     <!-- Latent Image Form -->
     <div class="formCard">
       <LatentImageForm
-        :inputClasses="inputClasses"
         :latentInput="latentInput"
         @updateImageInput="updateImageInput"
       />
@@ -22,7 +20,6 @@
     <!-- Clip & Sampler Form -->
     <div class="formCard">
       <ClipSamplerForm
-        :inputClasses="inputClasses"
         :promptSamplerInput="promptSamplerInput"
         @updateClipSampler="updateClipSampler"
       />
@@ -47,7 +44,6 @@ import { isUndefined } from '@img_gen/utils/type_guards';
 
 const props = defineProps<{
   models: GetModelsOutput;
-  inputClasses: string;
   workflow?: BasicImageGenWorkflow;
 }>();
 

@@ -1,7 +1,7 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle> Upscale </VExpansionPanelTitle>
+      <VExpansionPanelTitle> Upscale {{ additionalInfo }}</VExpansionPanelTitle>
 
       <VExpansionPanelText>
         <span>
@@ -10,7 +10,7 @@
             <span class="upscaleMultiplier">
               <VSelect
                 v-model="upscaleMultiplierStr"
-                :items="multiplierOptions"
+                :items="multiplierOptionsArr"
                 @update:model-value="updateUpscaleInput"
                 density="compact"
                 variant="solo"
@@ -39,7 +39,6 @@
           </div>
 
           <SamplerInput
-            :inputClasses="inputClasses"
             :samplerInput="samplerData"
             @updateSampler="updateImageSampler"
           />
@@ -59,16 +58,21 @@ import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
 import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
 import IntInput from '@/views/components/int_input.vue';
+import { arrayToMap } from '@img_gen/utils/array_to_obj';
 
-const multiplierOptions = [
-  { value: '1.25', title: '1.25x' },
-  { value: '1.5', title: '1.5x' },
-  { value: '2', title: '2x' },
-  { value: '2.5', title: '2.5x' },
-  { value: '3', title: '3x' },
-  { value: '3.5', title: '3.5x' },
-  { value: '4', title: '4x' },
-];
+const multiplierOptions: Record<string, string> = {
+  '1.25': '1.25x',
+  '1.5': '1.5x',
+  '2': '2x',
+  '2.5': '2.5x',
+  '3': '3x',
+  '3.5': '3.5x',
+  '4': '4x',
+};
+
+const multiplierOptionsArr = Object.entries(multiplierOptions)
+  .map(([k, v]) => ({ value: k, title: v }))
+  .sort((a, b) => Number.parseFloat(a.value) - Number.parseFloat(b.value));
 
 const defaultSamplerData = getDefaultUpscaleSamplerData();
 
@@ -76,16 +80,10 @@ const emit = defineEmits<{
   (e: 'updateUpscaleInput', payload: UpscalePrompt | undefined): void;
 }>();
 
-const props = withDefaults(
-  defineProps<{
-    inputClasses?: string;
-    upscaleInput?: UpscalePrompt;
-    inputDimensions?: InputDimensions;
-  }>(),
-  {
-    inputClasses: '',
-  },
-);
+const props = defineProps<{
+  upscaleInput?: UpscalePrompt;
+  inputDimensions?: InputDimensions;
+}>();
 
 const { upscaleInput, inputDimensions } = toRefs(props);
 
@@ -181,6 +179,18 @@ const expansionClasses = computed(() => {
   }
 
   return classes.join(' ');
+});
+
+const additionalInfo = computed(() => {
+  const res = `${upscaleWidth.value}x${upscaleHeight.value}`;
+
+  const multVal = multiplierOptions[upscaleMultiplierStr.value];
+  let multStr = '';
+  if (!!multVal) {
+    multStr = ` - (${multVal})`;
+  }
+
+  return ` - ${res}${multStr}`;
 });
 
 onBeforeMount(() => {

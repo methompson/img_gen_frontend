@@ -4,7 +4,6 @@
     <div class="formCard">
       <CheckpointLoraForm
         :models="models"
-        :inputClasses="inputClasses"
         :modelInput="modelInput"
         @updateModelInput="updateModelInput"
       />
@@ -13,7 +12,6 @@
     <!-- Latent Image Form -->
     <div class="formCard">
       <LatentImageForm
-        :inputClasses="inputClasses"
         :latentInput="latentInput"
         @updateImageInput="updateImageInput"
       />
@@ -22,7 +20,6 @@
     <!-- Clip & Sampler Form -->
     <div class="formCard">
       <ClipSamplerForm
-        :inputClasses="inputClasses"
         :promptSamplerInput="promptSamplerInput"
         @updateClipSampler="updateClipSampler"
       />
@@ -33,7 +30,6 @@
         @updateUpscaleInput="updateUpscaleInput"
         :inputDimensions="latentImageDimensions"
         :upscaleInput="upscaleInput"
-        :inputClasses="inputClasses"
       />
     </div>
   </div>
@@ -60,7 +56,6 @@ import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
 const props = defineProps<{
   models: GetModelsOutput;
-  inputClasses: string;
   workflow?: UpscaleImageGenWorkflow;
 }>();
 

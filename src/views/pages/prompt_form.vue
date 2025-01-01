@@ -1,5 +1,5 @@
 <template>
-  <div class="paneContainer d-flex flex-row">
+  <div class="paneContainer d-flex flex-row flex-grow-1">
     <div class="leftPane">
       <VSelect
         v-model="workflowType"
@@ -35,16 +35,13 @@
     </div>
   </div>
 
-  <div class="queueButton bottom-0 sticky py-4">
+  <div class="queueButton bottom-0 position-sticky py-4">
     <v-btn @click="queuePrompt" :disabled="!canQueue"> Queue Prompt </v-btn>
-    <!-- <BasicButton @click="queuePrompt" :disabled="!canQueue">
-      Queue Prompt
-    </BasicButton> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, type Ref } from 'vue';
+import { computed, nextTick, onBeforeMount, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
@@ -217,9 +214,10 @@ async function deletePrompt(prompt: PromptAndImageData) {
 
 <style scoped>
 .queueButton {
-  background-color: inherit;
+  background-color: rgb(var(--v-theme-background));
   width: 100%;
   border: 1px solid black;
+  z-index: 10;
 }
 
 .leftPane {

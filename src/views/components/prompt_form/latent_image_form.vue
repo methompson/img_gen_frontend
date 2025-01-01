@@ -1,7 +1,9 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle> Image & Batch Size </VExpansionPanelTitle>
+      <VExpansionPanelTitle>
+        Image & Batch Size {{ additionalInfo }}</VExpansionPanelTitle
+      >
 
       <VExpansionPanelText>
         <div class="latentImageInputContainer">
@@ -64,16 +66,10 @@ import { isUndefined } from '@img_gen/utils/type_guards';
 import IntForm from '@/views/components/int_input.vue';
 import { arrayToObject } from '@img_gen/utils/array_to_obj';
 
-const props = withDefaults(
-  defineProps<{
-    inputClasses?: string;
-    latentInput?: LatentImagePrompt;
-    missingInput?: boolean;
-  }>(),
-  {
-    inputClasses: '',
-  },
-);
+const props = defineProps<{
+  latentInput?: LatentImagePrompt;
+  missingInput?: boolean;
+}>();
 
 const { latentInput } = toRefs(props);
 
@@ -120,6 +116,10 @@ const presetResolutionObj = arrayToObject(
 
 watch(latentWidth, updateSelectFromResolution);
 watch(latentHeight, updateSelectFromResolution);
+
+const additionalInfo = computed(() => {
+  return ` - ${latentWidth.value}x${latentHeight.value}`;
+});
 
 const currentResolutionString = computed(() => {
   return `${latentWidth.value}x${latentHeight.value}`;

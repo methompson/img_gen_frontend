@@ -45,17 +45,15 @@ import FloatInput from '@/views/components/float_input.vue';
 const props = withDefaults(
   defineProps<{
     testing?: boolean;
-    inputClasses?: string;
     lora: PromptLoraInput;
     loraNames: string[];
   }>(),
   {
-    inputClasses: '',
     testing: false,
   },
 );
 
-const { lora, loraNames, inputClasses } = toRefs(props);
+const { lora, loraNames } = toRefs(props);
 
 const emit = defineEmits<{
   (e: 'removeLora', id: string): void;
@@ -67,7 +65,6 @@ const strengthModel = ref(1);
 const strengthClip = ref(1);
 
 onBeforeMount(() => {
-  console.log('lora rendered', lora.value.id);
   if (!props.testing) {
     beforeMountHandler();
   }

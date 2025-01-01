@@ -8,6 +8,8 @@ import ThemeView from '@/views/components/theme_view.vue';
 
 const appClasses = computed(() => {
   const classes = [
+    'd-flex',
+    'flex-column',
     'overflow-hidden',
     'text-slate-500',
     'dark:text-slate-400',

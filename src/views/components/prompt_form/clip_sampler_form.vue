@@ -1,7 +1,9 @@
 <template>
-  <VExpansionPanels>
+  <VExpansionPanels v-model="expansionPanelOpen">
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle> Clip & Sampler </VExpansionPanelTitle>
+      <VExpansionPanelTitle>
+        Clip & Sampler {{ additionalInfo }}</VExpansionPanelTitle
+      >
 
       <VExpansionPanelText>
         <span>
@@ -24,7 +26,6 @@
           </div>
 
           <SamplerForm
-            :inputClasses="inputClasses"
             :samplerInput="samplerData"
             @updateSampler="updateImageSampler"
           /> </span
@@ -45,15 +46,9 @@ import SamplerForm from '@/views/components/prompt_form/sampler_form.vue';
 
 const defaultSamplerData = getDefaultImageSamplerData();
 
-const props = withDefaults(
-  defineProps<{
-    promptSamplerInput?: PromptSampler;
-    inputClasses?: string;
-  }>(),
-  {
-    inputClasses: '',
-  },
-);
+const props = defineProps<{
+  promptSamplerInput?: PromptSampler;
+}>();
 
 const { promptSamplerInput } = toRefs(props);
 
@@ -81,14 +76,19 @@ const emit = defineEmits<{
   (e: 'updateClipSampler', payload: PromptSampler | undefined): void;
 }>();
 
-const textAreaSize = {
-  cols: 40,
-  rows: 6,
-};
+const expansionPanelOpen = ref(0);
 
 const positivePrompt = ref('');
 const negativePrompt = ref('');
 const samplerData: Ref<SamplerData | undefined> = ref(undefined);
+
+const additionalInfo = computed(() => {
+  if (!samplerData.value) {
+    return '';
+  }
+
+  return ` - ${samplerData.value.steps} steps, ${samplerData.value.cfg} cfg, ${samplerData.value.samplerName} / ${samplerData.value.scheduler}`;
+});
 
 const expansionClasses = computed(() => {
   const classes = [];

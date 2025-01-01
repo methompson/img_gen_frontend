@@ -3,14 +3,12 @@
     <BasicImageGenForm
       v-if="isBasicImageGenWorkflowForm"
       :workflow="basicImageGenWorkflow"
-      :inputClasses="inputClasses"
       :models="models"
       @updateWorkflow="updateWorkflow"
     />
     <UpscalePromptForm
       v-else-if="isUpscaleImageGenWorkflowForm"
       :workflow="upscaleImageGenWorkflow"
-      :inputClasses="inputClasses"
       :models="models"
       @updateWorkflow="updateWorkflow"
     />
@@ -73,19 +71,6 @@ const upscaleImageGenWorkflow = computed(() => {
     isUpscaleImageGenWorkflow(workflow.value)
     ? workflow.value
     : undefined;
-});
-
-const inputClasses = computed(() => {
-  const classes = [
-    'border-solid',
-    'border-2',
-    'border-indigo-600',
-    'block',
-    'mb-1',
-    'text-slate-700',
-  ];
-
-  return classes.join(' ');
 });
 
 onBeforeMount(() => {
