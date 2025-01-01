@@ -1,33 +1,37 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle>
-        Checkpoint & Loras {{ additionalInfo }}</VExpansionPanelTitle
-      >
+      <VExpansionPanelTitle class="formExpansionTitle">
+        Checkpoint & Loras {{ additionalInfo }}
+      </VExpansionPanelTitle>
 
       <VExpansionPanelText>
-        <div>Checkpoint</div>
+        <VCard>
+          <VCardText>
+            <div>Checkpoint</div>
 
-        <VSelect
-          v-model="checkpoint"
-          @update:modelValue="updateModelInput"
-          :items="checkpointModels"
-          variant="solo"
-          class="mx-2"
-        />
+            <VSelect
+              v-model="checkpoint"
+              @update:modelValue="updateModelInput"
+              :items="checkpointModels"
+              variant="solo"
+              class="mx-2"
+            />
 
-        <div>LORAs</div>
+            <div>LORAs</div>
 
-        <v-btn @click="addLora" icon="mdi-plus" />
+            <v-btn @click="addLora" icon="mdi-plus" />
 
-        <template v-for="lora in loras" :key="lora.id">
-          <LoraInput
-            :loraNames="loraNames"
-            :lora="lora"
-            @removeLora="removeLora"
-            @updateLora="updateLora"
-          />
-        </template>
+            <template v-for="lora in loras" :key="lora.id">
+              <LoraInput
+                :loraNames="loraNames"
+                :lora="lora"
+                @removeLora="removeLora"
+                @updateLora="updateLora"
+              />
+            </template>
+          </VCardText>
+        </VCard>
       </VExpansionPanelText>
     </VExpansionPanel>
   </VExpansionPanels>

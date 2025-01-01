@@ -1,48 +1,52 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle> Upscale {{ additionalInfo }}</VExpansionPanelTitle>
+      <VExpansionPanelTitle class="formExpansionTitle">
+        Upscale {{ additionalInfo }}</VExpansionPanelTitle
+      >
 
       <VExpansionPanelText>
-        <span>
-          <div class="upscaleInputContainer">
-            <span class="upscaleMultiplierLabel">Multiplier</span>
-            <span class="upscaleMultiplier">
-              <VSelect
-                v-model="upscaleMultiplierStr"
-                :items="multiplierOptionsArr"
+        <VCard>
+          <VCardText>
+            <div class="upscaleInputContainer">
+              <span class="upscaleMultiplierLabel">Multiplier</span>
+              <span class="upscaleMultiplier">
+                <VSelect
+                  v-model="upscaleMultiplierStr"
+                  :items="multiplierOptionsArr"
+                  @update:model-value="updateUpscaleInput"
+                  density="compact"
+                  variant="solo"
+                />
+              </span>
+
+              <span class="upscaleWidthLabel">Width</span>
+              <IntInput
+                v-model="upscaleWidth"
                 @update:model-value="updateUpscaleInput"
-                density="compact"
-                variant="solo"
+                class="upscaleWidthInput"
+                :step="1"
+                :min="1"
+                placeholder="Upscale Width"
               />
-            </span>
 
-            <span class="upscaleWidthLabel">Width</span>
-            <IntInput
-              v-model="upscaleWidth"
-              @update:model-value="updateUpscaleInput"
-              class="upscaleWidthInput"
-              :step="1"
-              :min="1"
-              placeholder="Upscale Width"
+              <span class="upscaleHeightLabel">Height</span>
+              <IntInput
+                v-model="upscaleHeight"
+                @input="updateUpscaleInput"
+                class="upscaleHeightInput"
+                :step="1"
+                :min="1"
+                placeholder="Upscale Height"
+              />
+            </div>
+
+            <SamplerInput
+              :samplerInput="samplerData"
+              @updateSampler="updateImageSampler"
             />
-
-            <span class="upscaleHeightLabel">Height</span>
-            <IntInput
-              v-model="upscaleHeight"
-              @input="updateUpscaleInput"
-              class="upscaleHeightInput"
-              :step="1"
-              :min="1"
-              placeholder="Upscale Height"
-            />
-          </div>
-
-          <SamplerInput
-            :samplerInput="samplerData"
-            @updateSampler="updateImageSampler"
-          />
-        </span>
+          </VCardText>
+        </VCard>
       </VExpansionPanelText>
     </VExpansionPanel>
   </VExpansionPanels>

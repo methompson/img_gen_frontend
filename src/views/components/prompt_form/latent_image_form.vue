@@ -1,54 +1,58 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle>
+      <VExpansionPanelTitle class="formExpansionTitle">
         Image & Batch Size {{ additionalInfo }}</VExpansionPanelTitle
       >
 
       <VExpansionPanelText>
-        <div class="latentImageInputContainer">
-          <span class="resSelectLabel">Presets</span>
-          <span class="resSelect">
-            <VSelect
-              :items="presetResolutions"
-              variant="solo"
-              density="compact"
-              v-model="currentResSelect"
-              @update:modelValue="updateResolutionFromSelect"
-              :hideDetails="true"
-            />
-          </span>
+        <VCard color="background">
+          <VCardText>
+            <div class="latentImageInputContainer">
+              <span class="resSelectLabel">Presets</span>
+              <span class="resSelect">
+                <VSelect
+                  :items="presetResolutions"
+                  variant="solo"
+                  density="compact"
+                  v-model="currentResSelect"
+                  @update:modelValue="updateResolutionFromSelect"
+                  :hideDetails="true"
+                />
+              </span>
 
-          <span class="latentWidthLabel">Width</span>
-          <IntForm
-            v-model="latentWidth"
-            @update:modelValue="updateImageInput"
-            class="latentWidthInput"
-            :min="1"
-            :step="1"
-            placeholder="Latent Width"
-          />
+              <span class="latentWidthLabel">Width</span>
+              <IntForm
+                v-model="latentWidth"
+                @update:modelValue="updateImageInput"
+                class="latentWidthInput"
+                :min="1"
+                :step="1"
+                placeholder="Latent Width"
+              />
 
-          <span class="latentHeightLabel">Height</span>
-          <IntForm
-            v-model="latentHeight"
-            @update:modelValue="updateImageInput"
-            class="latentHeightInput"
-            :min="1"
-            :step="1"
-            placeholder="Latent Height"
-          />
+              <span class="latentHeightLabel">Height</span>
+              <IntForm
+                v-model="latentHeight"
+                @update:modelValue="updateImageInput"
+                class="latentHeightInput"
+                :min="1"
+                :step="1"
+                placeholder="Latent Height"
+              />
 
-          <span class="batchSizeLabel">Batch Size</span>
-          <IntForm
-            v-model="batchSize"
-            @update:modelValue="updateImageInput"
-            class="batchSizeInput"
-            :min="1"
-            :step="1"
-            placeholder="Batch Size"
-          />
-        </div>
+              <span class="batchSizeLabel">Batch Size</span>
+              <IntForm
+                v-model="batchSize"
+                @update:modelValue="updateImageInput"
+                class="batchSizeInput"
+                :min="1"
+                :step="1"
+                placeholder="Batch Size"
+              />
+            </div>
+          </VCardText>
+        </VCard>
       </VExpansionPanelText>
     </VExpansionPanel>
   </VExpansionPanels>

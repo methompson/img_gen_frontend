@@ -1,35 +1,38 @@
 <template>
   <VExpansionPanels v-model="expansionPanelOpen">
     <VExpansionPanel :class="expansionClasses">
-      <VExpansionPanelTitle>
+      <VExpansionPanelTitle class="formExpansionTitle">
         Clip & Sampler {{ additionalInfo }}</VExpansionPanelTitle
       >
 
       <VExpansionPanelText>
-        <span>
-          <div class="clipContainer">
-            <VTextarea
-              v-model="positivePrompt"
-              variant="solo"
-              density="comfortable"
-              label="Positive Clip"
-              @update:modelValue="updateClipSampler"
-            />
+        <VCard color="background">
+          <VCardText>
+            <div class="clipContainer">
+              <VTextarea
+                v-model="positivePrompt"
+                variant="solo"
+                density="comfortable"
+                label="Positive Clip"
+                @update:modelValue="updateClipSampler"
+              />
 
-            <VTextarea
-              v-model="negativePrompt"
-              variant="solo"
-              density="comfortable"
-              label="Negative Clip"
-              @update:modelValue="updateClipSampler"
-            />
-          </div>
+              <VTextarea
+                v-model="negativePrompt"
+                variant="solo"
+                density="comfortable"
+                label="Negative Clip"
+                @update:modelValue="updateClipSampler"
+              />
+            </div>
 
-          <SamplerForm
-            :samplerInput="samplerData"
-            @updateSampler="updateImageSampler"
-          /> </span
-      ></VExpansionPanelText>
+            <SamplerForm
+              :samplerInput="samplerData"
+              @updateSampler="updateImageSampler"
+            />
+          </VCardText>
+        </VCard>
+      </VExpansionPanelText>
     </VExpansionPanel>
   </VExpansionPanels>
 </template>
@@ -91,7 +94,7 @@ const additionalInfo = computed(() => {
 });
 
 const expansionClasses = computed(() => {
-  const classes = [];
+  const classes = ['expansionClassTitle'];
   if (!promptSamplerInput.value) {
     classes.push('errorCard');
   }

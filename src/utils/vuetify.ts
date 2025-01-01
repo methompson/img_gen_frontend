@@ -8,12 +8,16 @@ import * as directives from 'vuetify/directives';
 const lightTheme: ThemeDefinition = {
   colors: {
     primary: '#F44336',
+    'primary-darken-1': '#D32F2F',
+    error: '#FF1744',
   },
 };
 
 const darkTheme: ThemeDefinition = {
   colors: {
     primary: '#B71C1C',
+    'primary-darken-1': '#8f1515',
+    error: '#FF1744',
   },
 };
 

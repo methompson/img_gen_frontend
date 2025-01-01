@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-2">
+  <div>
     <!-- Checkpoint & Lora Form -->
     <div class="formCard">
       <CheckpointLoraForm

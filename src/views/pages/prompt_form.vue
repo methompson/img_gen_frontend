@@ -1,41 +1,80 @@
 <template>
   <div class="paneContainer d-flex flex-row flex-grow-1">
-    <div class="leftPane">
-      <VSelect
-        v-model="workflowType"
-        :items="workflowTypes"
-        density="compact"
-        variant="solo"
-        class="mx-2"
-      />
+    <v-container class="ma-0 pa-0">
+      <VRow>
+        <VCol>
+          <VSelect
+            v-model="workflowType"
+            :items="workflowTypes"
+            density="compact"
+            variant="solo"
+            class="ma-2"
+            hide-details
+          />
+        </VCol>
 
-      <PromptInputs
-        :models="models"
-        :workflow="workflow"
-        :workflowType="workflowType"
-        @updateWorkflow="updateWorkflow"
-      />
-    </div>
+        <VCol>
+          <v-menu
+            v-model="historyMenuOpen"
+            :close-on-content-click="false"
+            location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn color="primary" icon="mdi-history" v-bind="props" />
+            </template>
 
-    <div class="rightPane mx-2">
-      <span class="historyButtonsContainer">
-        <div>
-          Prompt History
-          <v-btn color="primary" icon="mdi-refresh" @click="refreshHistory" />
-        </div>
+            <v-card>
+              <v-card-text>
+                <VRow class="pb-1 d-flex justify-space-between align-center">
+                  <VCol> Prompt History </VCol>
+                  <VCol>
+                    <v-btn
+                      color="primary"
+                      icon="mdi-refresh"
+                      @click="refreshHistory"
+                    />
+                  </VCol>
+                </VRow>
 
-        <template v-for="prompt in sortedPromptHistory" :key="prompt.promptId">
-          <div class="flex justify-between mb-2">
-            {{ prompt.promptNumber }}
-            <v-btn @click="loadPrompt(prompt)"> Load </v-btn>
-            <v-btn @click="deletePrompt(prompt)"> Delete </v-btn>
-          </div>
-        </template>
-      </span>
-    </div>
+                <VRow
+                  v-for="prompt in sortedPromptHistory"
+                  :key="prompt.promptId"
+                  class="pb-1 d-flex align-center"
+                >
+                  <VCol>
+                    {{ prompt.promptNumber }}
+                  </VCol>
+                  <VCol>
+                    <v-btn @click="loadPrompt(prompt)"> Load </v-btn>
+                  </VCol>
+                  <VCol>
+                    <v-btn
+                      @click="deletePrompt(prompt)"
+                      icon="mdi-trash-can-outline"
+                      color="error"
+                    />
+                  </VCol>
+                </VRow>
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </VCol>
+      </VRow>
+
+      <VRow>
+        <VCol>
+          <PromptInputs
+            :models="models"
+            :workflow="workflow"
+            :workflowType="workflowType"
+            @updateWorkflow="updateWorkflow"
+          />
+        </VCol>
+      </VRow>
+    </v-container>
   </div>
 
-  <div class="queueButton bottom-0 position-sticky py-4">
+  <div class="queueButton bottom-0 position-sticky text-center py-4">
     <v-btn color="primary" @click="queuePrompt" :disabled="!canQueue">
       Queue Prompt
     </v-btn>
@@ -43,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeMount, ref, type Ref } from 'vue';
+import { computed, onBeforeMount, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
@@ -60,9 +99,6 @@ import {
   type UpscaleImageGenWorkflow,
 } from '@img_gen/models/workflows/upscale_workflow';
 import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
-import { isPromptModels } from '@img_gen/models/inputs/prompt_models';
-import { isLatentImagePrompt } from '@img_gen/models/inputs/latent_image_input';
-import { isPromptSampler } from '@img_gen/models/inputs/prompt_sampler';
 import {
   getWorkflowFromName,
   WorkflowType,
@@ -81,6 +117,8 @@ const workflowTypes = [
   { title: 'Basic Image', value: WorkflowType.basicImageGen },
   { title: 'Basic Image with Upscale', value: WorkflowType.upscaleImageGen },
 ];
+
+const historyMenuOpen = ref(false);
 
 const canQueue = computed(() => {
   return !isUndefined(workflow.value);
@@ -229,5 +267,9 @@ async function deletePrompt(prompt: PromptAndImageData) {
 
 .formCard {
   margin-bottom: 1rem;
+}
+
+.formExpansionTitle {
+  background-color: #eee;
 }
 </style>
