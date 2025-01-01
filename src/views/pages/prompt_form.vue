@@ -21,7 +21,7 @@
       <span class="historyButtonsContainer">
         <div>
           Prompt History
-          <v-btn icon="mdi-refresh" @click="refreshHistory" />
+          <v-btn color="primary" icon="mdi-refresh" @click="refreshHistory" />
         </div>
 
         <template v-for="prompt in sortedPromptHistory" :key="prompt.promptId">
@@ -36,7 +36,9 @@
   </div>
 
   <div class="queueButton bottom-0 position-sticky py-4">
-    <v-btn @click="queuePrompt" :disabled="!canQueue"> Queue Prompt </v-btn>
+    <v-btn color="primary" @click="queuePrompt" :disabled="!canQueue">
+      Queue Prompt
+    </v-btn>
   </div>
 </template>
 
@@ -117,16 +119,6 @@ async function beforeMountHandler() {
 }
 
 function loadPrompt(prompt: PromptAndImageData) {
-  console.log({
-    prompt: prompt,
-    imageInput: prompt.workflow.imageInput,
-    isBasicImageGenWorkflow: isBasicImageGenWorkflow(prompt.workflow),
-    isUpscaleImageGenWorkflow: isUpscaleImageGenWorkflow(prompt.workflow),
-    isPromptModels: isPromptModels(prompt.workflow.modelInput),
-    islatentImage: isLatentImagePrompt(prompt.workflow.imageInput),
-    isPromptSampler: isPromptSampler(prompt.workflow.promptInput),
-  });
-
   const type = getWorkflowFromName(prompt.workflowType);
   switch (type) {
     case WorkflowType.basicImageGen:
@@ -181,7 +173,6 @@ async function queuePrompt() {
       workflowType.value,
       workflow.value,
     );
-    console.log({ queueResponse });
     imgGalleryStore.updatePromptId(queueResponse.prompt_id);
     appStore.setSuccessMessage({ message: 'Prompt queued' });
   } catch (e) {
@@ -201,7 +192,6 @@ async function refreshHistory() {
 }
 
 async function deletePrompt(prompt: PromptAndImageData) {
-  console.log('Delete', prompt);
   try {
     await imgGalleryStore.deleteHistoryItems([prompt.promptId]);
     appStore.setSuccessMessage({ message: 'Prompt deleted' });

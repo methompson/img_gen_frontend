@@ -28,7 +28,6 @@ export async function sendPrompt(
   );
   const json = await response.json();
 
-  console.log('sendPrompt', json);
   if (!isSendPromptResponse(json)) {
     throw new Error('Invalid response');
   }

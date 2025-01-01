@@ -13,18 +13,11 @@ export async function fetchImages(): Promise<PromptAndImageData[]> {
     throw new Error('Expected an array');
   }
 
-  console.log('history', data);
-
   for (const dat of data) {
     if (PromptAndImageData.isPromptAndHistoryDataJSON(dat)) {
       output.push(new PromptAndImageData(dat));
     }
   }
-
-  console.log({
-    history: data,
-    promptDat: output,
-  });
 
   return output;
 }
