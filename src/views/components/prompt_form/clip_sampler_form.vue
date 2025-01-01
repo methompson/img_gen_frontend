@@ -6,26 +6,24 @@
       <VExpansionPanelText>
         <span>
           <div class="clipContainer">
-            <div>Positive Clip</div>
-            <textarea
+            <VTextarea
               v-model="positivePrompt"
-              @input="updateClipSampler"
-              :rows="textAreaSize.rows"
-              :cols="textAreaSize.cols"
-              :class="inputClasses"
+              variant="solo"
+              density="comfortable"
+              label="Positive Clip"
+              @update:modelValue="updateClipSampler"
             />
 
-            <div>Negative Clip</div>
-            <textarea
+            <VTextarea
               v-model="negativePrompt"
-              @input="updateClipSampler"
-              :rows="textAreaSize.rows"
-              :cols="textAreaSize.cols"
-              :class="inputClasses"
+              variant="solo"
+              density="comfortable"
+              label="Negative Clip"
+              @update:modelValue="updateClipSampler"
             />
           </div>
 
-          <SamplerInput
+          <SamplerForm
             :inputClasses="inputClasses"
             :samplerInput="samplerData"
             @updateSampler="updateImageSampler"
@@ -43,7 +41,7 @@ import type { PromptSampler } from '@img_gen/models/inputs/prompt_sampler';
 import { isUndefined } from '@img_gen/utils/type_guards';
 import { getDefaultImageSamplerData } from './types';
 
-import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
+import SamplerForm from '@/views/components/prompt_form/sampler_form.vue';
 
 const defaultSamplerData = getDefaultImageSamplerData();
 

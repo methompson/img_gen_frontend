@@ -6,36 +6,45 @@
       <VExpansionPanelText>
         <div class="samplerContainer">
           <div class="seedLabel">Seed</div>
-          <IntForm
+          <IntInput
             v-model="samplerSeed"
-            @change="updateSampler"
-            :inputClasses="inputClasses + ' seedInput'"
+            @update:model-value="updateSampler"
+            class="seedInput"
             :step="1"
             placeholder="seed"
           />
 
           <div class="stepsLabel">Steps</div>
-          <IntForm
+          <IntInput
             v-model="samplerSteps"
             @change="updateSampler"
-            :inputClasses="inputClasses + ' stepsInput'"
+            class="stepsInput"
             :min="1"
             :step="1"
             placeholder="steps"
           />
 
           <div class="cfgLabel">CFG</div>
-          <FloatForm
+          <FloatInput
             v-model="samplerCfg"
             @change="updateSampler"
-            :inputClasses="inputClasses + ' cfgInput'"
+            class="cfgInput"
             :step="0.5"
             :min="0"
             placeholder="cfg"
           />
 
           <div class="samplerLabel">Sampler</div>
-          <select
+          <VSelect
+            :items="samplerOptions"
+            v-model="samplerName"
+            @update:model-value="updateSampler"
+            variant="solo"
+            density="compact"
+            class="samplerInput"
+            :hide-details="true"
+          />
+          <!-- <select
             v-model="samplerName"
             @change="updateSampler"
             :class="inputClasses + ' samplerInput'"
@@ -72,33 +81,24 @@
             <option value="ddim">ddim</option>
             <option value="uni_pc">uni_pc</option>
             <option value="uni_pc_bh2">uni_pc_bh2</option>
-          </select>
+          </select> -->
 
           <div class="schedulerLabel">Scheduler</div>
-          <select
+          <VSelect
+            :items="samplerSchedulerOptions"
             v-model="samplerScheduler"
-            @change="updateSampler"
-            :class="inputClasses + ' schedulerInput'"
-          >
-            <option value="normal">normal</option>
-            <option value="karras">karras</option>
-            <option value="exponential">exponential</option>
-            <option value="sgm_uniform">sgm_uniform</option>
-            <option value="simple">simple</option>
-            <option value="ddim_uniform">ddim_uniform</option>
-            <option value="beta">beta</option>
-            <option value="linear_quadratic">linear_quadratic</option>
-            <option value="AYS SDXL">AYS SDXL</option>
-            <option value="AYS SD1">AYS SD1</option>
-            <option value="AYS SVD">AYS SVD</option>
-            <option value="GITS[coeff=1.2]">GITS[coeff=1.2]</option>
-          </select>
+            @update:model-value="updateSampler"
+            variant="solo"
+            density="compact"
+            class="schedulerInput"
+            :hide-details="true"
+          />
 
           <div class="denoiseLabel">Denoise</div>
-          <FloatForm
+          <FloatInput
             v-model="samplerDenoise"
             @change="updateSampler"
-            :inputClasses="inputClasses + ' denoiseInput'"
+            class="denoiseInput"
             :step="0.01"
             :min="0"
             placeholder="denoise"
@@ -111,15 +111,62 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, toRefs, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import { getSeed } from '@img_gen/utils/get_seed';
 import { isUndefined } from '@img_gen/utils/type_guards';
 
-import IntForm from '@/views/components/int_form_old.vue';
-import FloatForm from '@/views/components/float_form_old.vue';
+import IntInput from '@/views/components/int_input.vue';
+import FloatInput from '@/views/components/float_input.vue';
+
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import { storeToRefs } from 'pinia';
+
+const samplerOptions = [
+  'euler',
+  'euler_cfg_pp',
+  'euler_ancestral',
+  'euler_ancestral_cfg_pp',
+  'heun',
+  'heunpp2',
+  'dpm_2',
+  'dpm_2_ancestral',
+  'dpm_fast',
+  'dpm_adaptive',
+  'dpmpp_2s_ancestral',
+  'dpmpp_2s_ancestral_cfg_pp',
+  'dpmpp_sde',
+  'dpmpp_sde_gpu',
+  'dpmpp_2m',
+  'dpmpp_2m_cfg_pp',
+  'dpmpp_2m_sde',
+  'dpmpp_2m_sde_gpu',
+  'dpmpp_3m_sde',
+  'dpmpp_3m_sde_gpu',
+  'ddpm',
+  'lcm',
+  'ipndm',
+  'ipndm_v',
+  'deis',
+  'ddim',
+  'uni_pc',
+  'uni_pc_bh2',
+];
+
+const samplerSchedulerOptions = [
+  'normal',
+  'karras',
+  'exponential',
+  'sgm_uniform',
+  'simple',
+  'ddim_uniform',
+  'beta',
+  'linear_quadratic',
+  'AYS SDXL',
+  'AYS SD1',
+  'AYS SVD',
+  'GITS[coeff=1.2]',
+];
 
 const imgGalleryStore = useImgGalleryStore();
 const { promptId } = storeToRefs(imgGalleryStore);
@@ -186,6 +233,14 @@ function beforeMountHandler() {
 }
 
 function updateSampler() {
+  console.log('updateSampler', {
+    seed: samplerSeed.value,
+    steps: samplerSteps.value,
+    cfg: samplerCfg.value,
+    samplerName: samplerName.value,
+    scheduler: samplerScheduler.value,
+    denoise: samplerDenoise.value,
+  });
   emit('updateSampler', {
     seed: samplerSeed.value,
     steps: samplerSteps.value,
@@ -255,6 +310,8 @@ function updateSampler() {
 .schedulerLabel,
 .denoiseLabel {
   margin-right: 1em;
+  display: flex;
+  align-items: center;
 }
 
 .seedInput,
@@ -264,5 +321,6 @@ function updateSampler() {
 .schedulerInput,
 .denoiseInput {
   width: 17em;
+  margin-bottom: 0.5em;
 }
 </style>

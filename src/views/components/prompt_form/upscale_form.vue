@@ -8,37 +8,30 @@
           <div class="upscaleInputContainer">
             <span class="upscaleMultiplierLabel">Multiplier</span>
             <span class="upscaleMultiplier">
-              <select
-                class="rounded-md pa-2 my-2"
+              <VSelect
                 v-model="upscaleMultiplierStr"
-                @input="updateUpscaleInput"
-              >
-                <option value=""></option>
-                <option value="1.25">1.25x</option>
-                <option value="1.5">1.5x</option>
-                <option value="2">2x</option>
-                <option value="2.5">2.5x</option>
-                <option value="3">3x</option>
-                <option value="3.5">3.5x</option>
-                <option value="4">4x</option>
-              </select>
+                :items="multiplierOptions"
+                @update:model-value="updateUpscaleInput"
+                density="compact"
+                variant="solo"
+              />
             </span>
 
             <span class="upscaleWidthLabel">Width</span>
-            <IntForm
+            <IntInput
               v-model="upscaleWidth"
-              @input="updateUpscaleInput"
-              :inputClasses="inputClasses + ' upscaleWidthInput'"
+              @update:model-value="updateUpscaleInput"
+              class="upscaleWidthInput"
               :step="1"
               :min="1"
               placeholder="Upscale Width"
             />
 
             <span class="upscaleHeightLabel">Height</span>
-            <IntForm
+            <IntInput
               v-model="upscaleHeight"
               @input="updateUpscaleInput"
-              :inputClasses="inputClasses + ' upscaleHeightInput'"
+              class="upscaleHeightInput"
               :step="1"
               :min="1"
               placeholder="Upscale Height"
@@ -65,7 +58,17 @@ import type { SamplerData } from '@img_gen/models/inputs/sampler';
 import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
 import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
-import IntForm from '@/views/components/int_form_old.vue';
+import IntInput from '@/views/components/int_input.vue';
+
+const multiplierOptions = [
+  { value: '1.25', title: '1.25x' },
+  { value: '1.5', title: '1.5x' },
+  { value: '2', title: '2x' },
+  { value: '2.5', title: '2.5x' },
+  { value: '3', title: '3x' },
+  { value: '3.5', title: '3.5x' },
+  { value: '4', title: '4x' },
+];
 
 const defaultSamplerData = getDefaultUpscaleSamplerData();
 
@@ -277,8 +280,8 @@ function setDimensionsFromMultiplier() {
 }
 
 .upscaleWidthInput,
-.upscaleHeightInput,
 .upscaleHeightInput {
   width: 17em;
+  margin-bottom: 0.5em;
 }
 </style>
