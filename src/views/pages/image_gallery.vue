@@ -43,7 +43,7 @@ import { getImageUrl } from '@/utils/make_image_url';
 import type { ImageSet } from '@/models/history';
 
 const imgGalleryStore = useImgGalleryStore();
-const { selectedImages, selectedImagesMap } = storeToRefs(imgGalleryStore);
+const { selectedImages } = storeToRefs(imgGalleryStore);
 
 const showSlideshow = ref(false);
 

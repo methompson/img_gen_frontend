@@ -1,4 +1,12 @@
 <template>
+  <SlideShow
+    v-if="showSlideShow"
+    @close="showSlideShow = false"
+    :images="imagesToShow"
+    :showControls="false"
+    :title="slideshowTitle"
+  />
+
   <div class="outline mx-4 pa-2">
     <h2>{{ prompt.promptNumber }}</h2>
     <template
@@ -7,18 +15,24 @@
     >
       <span v-if="isImageNodeAllowed(imgKey)">
         {{ imgKey }}
-        <div class="flex flex-row">
+        <div class="d-flex flex-row">
           <template
             v-for="img in imgValue"
             :key="`${prompt.promptId}_${img.image}`"
           >
-            <span>
+            <div class="imageContainer">
               <img
                 @click="() => imageClick(img)"
                 :src="`http://localhost:3000/image/${img.thumb}`"
                 :class="getImageClasses(img)"
               />
-            </span>
+
+              <span class="magGlass">
+                <v-icon @click="showImage(img)" color="white"
+                  >mdi-magnify</v-icon
+                >
+              </span>
+            </div>
           </template>
         </div>
       </span>
@@ -39,11 +53,14 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { computed, ref, toRefs, type Ref } from 'vue';
+
 import type { ImageSet, PromptAndImageData } from '@/models/history';
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
 import { isNullOrUndefined } from '@img_gen/utils/type_guards';
-import { storeToRefs } from 'pinia';
-import { computed, toRefs } from 'vue';
+import SlideShow from '@/views/components/slide_show.vue';
+import { getImageUrl } from '@/utils/make_image_url';
 
 const imgGalleryStore = useImgGalleryStore();
 
@@ -53,6 +70,8 @@ const props = defineProps<{
 
 const { prompt } = toRefs(props);
 const { selectedImagesMap, filteredNodes } = storeToRefs(imgGalleryStore);
+
+const imageToShow: Ref<ImageSet | undefined> = ref(undefined);
 
 const images = computed(() => {
   const imagesByNode: Record<string, ImageSet[]> = {};
@@ -67,6 +86,29 @@ const images = computed(() => {
 
   return imagesByNode;
 });
+
+const showSlideShow = computed({
+  get: () => !!imageToShow.value,
+  set() {
+    imageToShow.value = undefined;
+  },
+});
+
+const imagesToShow = computed(() => {
+  if (!imageToShow.value) {
+    return [];
+  }
+
+  return [getImageUrl(imageToShow.value.image)];
+});
+
+const slideshowTitle = computed(() => {
+  return `Prompt ${prompt.value.promptNumber}`;
+});
+
+function showImage(img: ImageSet) {
+  imageToShow.value = img;
+}
 
 function isImageNodeAllowed(imageSetKey: string) {
   if (filteredNodes.value.length === 0) {
@@ -108,5 +150,19 @@ function getImageClasses(imageSet: ImageSet) {
 
 .outline {
   border-color: transparent;
+}
+
+.imageContainer {
+  position: relative;
+
+  img {
+    display: block;
+  }
+
+  .magGlass {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 </style>

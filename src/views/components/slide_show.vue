@@ -1,14 +1,16 @@
 <template>
   <div class="slideshowContainer">
     <div class="slideshowHeader pa-4">
-      Slide Show
+      {{ slideShowTitle }}
       <span>
-        <v-btn
-          icon="mdi-play"
-          v-if="isNullOrUndefined(timeoutRef)"
-          @click="startSlideshow"
-        />
-        <v-btn icon="mdi-stop" v-else @click="stopSlideshow" />
+        <span v-if="showControls">
+          <v-btn
+            icon="mdi-play"
+            v-if="isNullOrUndefined(timeoutRef)"
+            @click="startSlideshow"
+          />
+          <v-btn icon="mdi-stop" v-else @click="stopSlideshow" />
+        </span>
 
         <v-btn class="ml-2" icon="mdi-close" @click="emit('close')" />
       </span>
@@ -32,11 +34,18 @@ import {
 
 import { isNullOrUndefined, isUndefined } from '@img_gen/utils/type_guards';
 
-const props = defineProps<{
-  images: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    images: string[];
+    showControls?: boolean;
+    title?: string;
+  }>(),
+  {
+    showControls: true,
+  },
+);
 
-const { images } = toRefs(props);
+const { images, title } = toRefs(props);
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -47,6 +56,14 @@ const timeoutRef: Ref<number | undefined> = ref(undefined);
 
 const currentImage = computed(() => images.value[currentImageIndex.value]);
 const slideshowOn = computed(() => !isNullOrUndefined(timeoutRef.value));
+
+const slideShowTitle = computed(() => {
+  if (title.value) {
+    return title.value;
+  }
+
+  return 'Slide Show';
+});
 
 function nextImage() {
   currentImageIndex.value = (currentImageIndex.value + 1) % images.value.length;
@@ -119,7 +136,6 @@ onUnmounted(() => {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: red;
   background-color: rgb(var(--v-theme-background));
 }
 
