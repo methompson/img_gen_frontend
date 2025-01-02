@@ -2,8 +2,8 @@
 
 <template>
   <div>
-    <RouterLink to="/" class="text-slate mr-2">Home</RouterLink>
-    <RouterLink to="/gallery" class="text-slate mr-2">Gallery</RouterLink>
-    <RouterLink to="/prompt" class="text-slate mr-2">Prompt</RouterLink>
+    <RouterLink to="/" class="text-slate mr-2">Home Gallery</RouterLink>
+    <RouterLink to="/slideshow" class="text-slate mr-2">Slide Show</RouterLink>
+    <RouterLink to="/prompt" class="text-slate mr-2">Prompt Form</RouterLink>
   </div>
 </template>

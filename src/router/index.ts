@@ -9,8 +9,8 @@ const router = createRouter({
       component: () => import('@/views/pages/prompt_history_viewer.vue'),
     },
     {
-      path: '/gallery',
-      name: 'gallery',
+      path: '/slideshow',
+      name: 'slideshow',
       component: () => import('@/views/pages/image_gallery.vue'),
     },
     {

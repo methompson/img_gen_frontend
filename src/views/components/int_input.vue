@@ -3,7 +3,7 @@
     class="int_form"
     v-model="rawValue"
     density="compact"
-    variant="solo"
+    variant="solo-filled"
     prepend-inner-icon="mdi-chevron-down"
     append-inner-icon="mdi-chevron-up"
     :hide-details="true"

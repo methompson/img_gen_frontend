@@ -16,7 +16,7 @@
                   :items="multiplierOptionsArr"
                   @update:model-value="updateUpscaleInput"
                   density="compact"
-                  variant="solo"
+                  variant="solo-filled"
                 />
               </span>
 
@@ -62,7 +62,6 @@ import type { UpscalePrompt } from '@img_gen/models/inputs/upscale';
 
 import SamplerInput from '@/views/components/prompt_form/sampler_form.vue';
 import IntInput from '@/views/components/int_input.vue';
-import { arrayToMap } from '@img_gen/utils/array_to_obj';
 
 const multiplierOptions: Record<string, string> = {
   '1.25': '1.25x',

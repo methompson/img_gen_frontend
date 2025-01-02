@@ -6,23 +6,27 @@
       >
 
       <VExpansionPanelText>
-        <VCard color="background">
+        <VCard>
           <VCardText>
             <div class="clipContainer">
               <VTextarea
                 v-model="positivePrompt"
-                variant="solo"
+                variant="solo-filled"
                 density="comfortable"
                 label="Positive Clip"
                 @update:modelValue="updateClipSampler"
+                hide-details
+                class="pb-2"
               />
 
               <VTextarea
                 v-model="negativePrompt"
-                variant="solo"
+                variant="solo-filled"
                 density="comfortable"
                 label="Negative Clip"
                 @update:modelValue="updateClipSampler"
+                hide-details
+                class="pb-2"
               />
             </div>
 

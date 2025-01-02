@@ -1,7 +1,9 @@
 <template>
   <VExpansionPanels>
     <VExpansionPanel>
-      <VExpansionPanelTitle> Sampler </VExpansionPanelTitle>
+      <VExpansionPanelTitle class="formExpansionTitle">
+        Sampler
+      </VExpansionPanelTitle>
 
       <VExpansionPanelText>
         <div class="samplerContainer">
@@ -39,7 +41,7 @@
             :items="samplerOptions"
             v-model="samplerName"
             @update:model-value="updateSampler"
-            variant="solo"
+            variant="solo-filled"
             density="compact"
             class="samplerInput"
             :hide-details="true"
@@ -50,7 +52,7 @@
             :items="samplerSchedulerOptions"
             v-model="samplerScheduler"
             @update:model-value="updateSampler"
-            variant="solo"
+            variant="solo-filled"
             density="compact"
             class="schedulerInput"
             :hide-details="true"

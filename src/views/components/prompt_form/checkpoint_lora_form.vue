@@ -14,7 +14,7 @@
               v-model="checkpoint"
               @update:modelValue="updateModelInput"
               :items="checkpointModels"
-              variant="solo"
+              variant="solo-filled"
               class="mx-2"
             />
 

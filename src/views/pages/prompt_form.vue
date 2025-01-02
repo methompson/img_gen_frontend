@@ -2,18 +2,18 @@
   <div class="paneContainer d-flex flex-row flex-grow-1">
     <v-container class="ma-0 pa-0">
       <VRow>
-        <VCol>
+        <VCol cols="12" sm="4">
           <VSelect
             v-model="workflowType"
             :items="workflowTypes"
             density="compact"
-            variant="solo"
+            variant="solo-filled"
             class="ma-2"
             hide-details
           />
         </VCol>
 
-        <VCol>
+        <VCol cols="12" sm="4">
           <v-menu
             v-model="historyMenuOpen"
             :close-on-content-click="false"
@@ -39,25 +39,21 @@
                 <VRow
                   v-for="prompt in sortedPromptHistory"
                   :key="prompt.promptId"
-                  class="pb-1 d-flex align-center"
+                  class="pb-2 d-flex align-center"
                 >
-                  <VCol>
-                    {{ prompt.promptNumber }}
-                  </VCol>
-                  <VCol>
-                    <v-btn @click="loadPrompt(prompt)"> Load </v-btn>
-                  </VCol>
-                  <VCol>
-                    <v-btn
-                      @click="deletePrompt(prompt)"
-                      icon="mdi-trash-can-outline"
-                      color="error"
-                    />
-                  </VCol>
+                  <HistoryRow
+                    :prompt="prompt"
+                    @loadPrompt="loadPrompt"
+                    @deletePrompt="deletePrompt"
+                  />
                 </VRow>
               </v-card-text>
             </v-card>
           </v-menu>
+        </VCol>
+
+        <VCol cols="12" sm="4">
+          <NodeFilterSelect />
         </VCol>
       </VRow>
 
@@ -90,6 +86,9 @@ import { useAppStore } from '@/stores/app_store';
 import type { PromptAndImageData } from '@/models/history';
 
 import PromptInputs from '@/views/components/prompt_inputs.vue';
+import NodeFilterSelect from '@/views/components/node_filter_select.vue';
+import HistoryRow from '@/views/components/prompt_form/history_row.vue';
+
 import {
   isBasicImageGenWorkflow,
   type BasicImageGenWorkflow,
@@ -260,7 +259,7 @@ async function deletePrompt(prompt: PromptAndImageData) {
 }
 </style>
 
-<style>
+<style lang="scss">
 .errorCard {
   border: 1px solid #dc2626 !important;
 }
@@ -269,7 +268,15 @@ async function deletePrompt(prompt: PromptAndImageData) {
   margin-bottom: 1rem;
 }
 
-.formExpansionTitle {
-  background-color: #eee;
+@media (prefers-color-scheme: dark) {
+  .formExpansionTitle {
+    background-color: #333;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .formExpansionTitle {
+    background-color: #eee;
+  }
 }
 </style>

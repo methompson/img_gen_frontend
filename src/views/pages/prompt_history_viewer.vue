@@ -1,9 +1,19 @@
+<template>
+  <NodeFilterSelect />
+
+  <template v-for="prompt in sortedPrompts" :key="`card_${prompt.promptId}`">
+    <PromptCard :prompt="prompt" />
+  </template>
+</template>
+
 <script setup lang="ts">
+import { computed, onBeforeMount, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+
+import NodeFilterSelect from '@/views/components/node_filter_select.vue';
 import PromptCard from '@/views/components/prompt_card.vue';
 
 import { useImgGalleryStore } from '@/stores/img_gallery_store';
-import { computed, onBeforeMount } from 'vue';
 
 const imgGalleryStore = useImgGalleryStore();
 const { promptData } = storeToRefs(imgGalleryStore);
@@ -30,9 +40,3 @@ onBeforeMount(() => {
   onBeforeMountHandler();
 });
 </script>
-
-<template>
-  <template v-for="prompt in sortedPrompts" :key="`card_${prompt.promptId}`">
-    <PromptCard :prompt="prompt" />
-  </template>
-</template>

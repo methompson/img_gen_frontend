@@ -1,6 +1,6 @@
 <template>
-  <div class="slideshowContainer bg-slate-800">
-    <div class="slideshowHeader bg-slate-900 text-slate-400 pa-4">
+  <div class="slideshowContainer">
+    <div class="slideshowHeader pa-4">
       Slide Show
       <span>
         <v-btn
@@ -9,7 +9,8 @@
           @click="startSlideshow"
         />
         <v-btn icon="mdi-stop" v-else @click="stopSlideshow" />
-        <v-btn icon="mdi-close" @click="emit('close')" />
+
+        <v-btn class="ml-2" icon="mdi-close" @click="emit('close')" />
       </span>
     </div>
 
@@ -117,6 +118,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  background-color: red;
+  background-color: rgb(var(--v-theme-background));
 }
 
 .slideshowContainer {
@@ -128,6 +132,8 @@ onUnmounted(() => {
 
   display: flex;
   flex-direction: column;
+  z-index: 10;
+  background-color: rgb(var(--v-theme-surface));
 }
 
 .imageContainer {

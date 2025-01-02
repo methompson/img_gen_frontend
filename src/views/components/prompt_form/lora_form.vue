@@ -8,7 +8,7 @@
         v-model="modelName"
         @update:modelValue="updateLora"
         density="compact"
-        variant="solo"
+        variant="solo-filled"
         class="loraModelSelect mx-2"
       />
 

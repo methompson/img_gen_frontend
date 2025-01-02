@@ -21,6 +21,7 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     upscaleModels: [],
   });
   const promptIdState = ref('');
+  const filteredNodesState: Ref<string[]> = ref([]);
 
   const promptData = computed(() => [...promptDataState.value]);
   const selectedImages = computed(() => [...selectedImageState.value]);
@@ -31,6 +32,12 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     ...modelsState.value,
   }));
   const promptId = computed(() => promptIdState.value);
+  const filteredNodes = computed({
+    get: () => [...filteredNodesState.value],
+    set(value: string[]) {
+      filteredNodesState.value = value;
+    },
+  });
 
   async function fetchHistory() {
     const history = await historyApi.fetchImages();
@@ -76,6 +83,7 @@ export const useImgGalleryStore = defineStore('imageGallery', () => {
     selectedImagesMap,
     models,
     promptId,
+    filteredNodes,
     // Functions
     deleteHistoryItems,
     queuePrompt,

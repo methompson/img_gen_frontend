@@ -6,14 +6,14 @@
       >
 
       <VExpansionPanelText>
-        <VCard color="background">
+        <VCard>
           <VCardText>
             <div class="latentImageInputContainer">
               <span class="resSelectLabel">Presets</span>
               <span class="resSelect">
                 <VSelect
                   :items="presetResolutions"
-                  variant="solo"
+                  variant="solo-filled"
                   density="compact"
                   v-model="currentResSelect"
                   @update:modelValue="updateResolutionFromSelect"
@@ -122,7 +122,8 @@ watch(latentWidth, updateSelectFromResolution);
 watch(latentHeight, updateSelectFromResolution);
 
 const additionalInfo = computed(() => {
-  return ` - ${latentWidth.value}x${latentHeight.value}`;
+  const batchQuant = batchSize.value === 1 ? 'image' : 'images';
+  return ` - ${latentWidth.value}x${latentHeight.value} / ${batchSize.value} ${batchQuant}`;
 });
 
 const currentResolutionString = computed(() => {
