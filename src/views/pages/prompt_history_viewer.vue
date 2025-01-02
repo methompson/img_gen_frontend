@@ -1,9 +1,13 @@
 <template>
   <NodeFilterSelect />
 
-  <template v-for="prompt in sortedPrompts" :key="`card_${prompt.promptId}`">
-    <PromptCard :prompt="prompt" />
-  </template>
+  <VRow>
+    <template v-for="prompt in sortedPrompts" :key="`card_${prompt.promptId}`">
+      <VCol :cols="12" :sm="6" :lg="4" class="mb-4">
+        <PromptCard :prompt="prompt" />
+      </VCol>
+    </template>
+  </VRow>
 </template>
 
 <script setup lang="ts">

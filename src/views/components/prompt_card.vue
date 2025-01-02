@@ -15,7 +15,7 @@
     >
       <span v-if="isImageNodeAllowed(imgKey)">
         {{ imgKey }}
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row overflow-auto">
           <template
             v-for="img in imgValue"
             :key="`${prompt.promptId}_${img.image}`"
