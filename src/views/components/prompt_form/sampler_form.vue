@@ -176,6 +176,10 @@ const samplerName = ref('euler');
 const samplerScheduler = ref('normal');
 const samplerDenoise = ref(1);
 
+watch(samplerSeed, () => {
+  console.log('samplerSeed', samplerSeed.value);
+});
+
 onBeforeMount(() => {
   if (!props.testing) {
     beforeMountHandler();

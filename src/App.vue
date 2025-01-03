@@ -11,8 +11,7 @@ const appClasses = computed(() => {
     'd-flex',
     'flex-column',
     'overflow-hidden',
-    'text-slate-500',
-    'dark:text-slate-400',
+
     'h-screen',
     'overflow-scroll',
     'pointer-events-auto',

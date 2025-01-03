@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import Decimal from 'decimal.js';
-import { computed, nextTick, onBeforeMount, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, ref, toRefs, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -34,7 +34,10 @@ const props = withDefaults(
 
 const { modelValue, step } = toRefs(props);
 watch(modelValue, (newVal) => {
-  rawValue.value = `${newVal}`;
+  let updatedValue = newVal <= props.max ? newVal : props.max;
+  updatedValue = updatedValue >= props.min ? updatedValue : props.min;
+
+  setNewNumber(updatedValue);
 });
 
 const emit = defineEmits<{
@@ -58,7 +61,6 @@ function increment() {
     .add(decimalStep.value)
     .toNumber();
   const newValue = parsedValue <= props.max ? parsedValue : props.max;
-
   setNewNumber(newValue);
 }
 

@@ -8,7 +8,10 @@
   />
 
   <div class="outline mx-4 pa-2">
-    <h2>{{ prompt.promptNumber }}</h2>
+    <span class="d-flex justify-space-between">
+      <h2>{{ prompt.promptNumber }}</h2>
+      <v-btn @click="deletePrompt" icon="mdi-trash-can-outline" color="error" />
+    </span>
     <template
       v-for="[imgKey, imgValue] in Object.entries(images)"
       :key="`${prompt.promptId}_${imgKey}`"
@@ -68,6 +71,10 @@ const props = defineProps<{
   prompt: PromptAndImageData;
 }>();
 
+const emit = defineEmits<{
+  (e: 'deletePrompt', prompt: PromptAndImageData): void;
+}>();
+
 const { prompt } = toRefs(props);
 const { selectedImagesMap, filteredNodes } = storeToRefs(imgGalleryStore);
 
@@ -105,6 +112,10 @@ const imagesToShow = computed(() => {
 const slideshowTitle = computed(() => {
   return `Prompt ${prompt.value.promptNumber}`;
 });
+
+function deletePrompt() {
+  emit('deletePrompt', prompt.value);
+}
 
 function showImage(img: ImageSet) {
   imageToShow.value = img;

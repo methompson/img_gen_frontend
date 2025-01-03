@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeMount, ref, toRefs, watch } from 'vue';
+import { nextTick, ref, toRefs, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -34,7 +34,10 @@ const props = withDefaults(
 
 const { modelValue, step } = toRefs(props);
 watch(modelValue, (newVal) => {
-  rawValue.value = `${newVal}`;
+  let updatedValue = newVal <= props.max ? newVal : props.max;
+  updatedValue = updatedValue >= props.min ? updatedValue : props.min;
+
+  setNewNumber(updatedValue);
 });
 
 const emit = defineEmits<{
@@ -63,8 +66,8 @@ function decrement() {
 
 function setNewNumber(num: number, str: string = `${num}`) {
   numValue.value = num;
-  rawValue.value = `${num}`;
-  prevRawValue.value = rawValue.value;
+  rawValue.value = str;
+  prevRawValue.value = str;
 }
 
 function updateValue(ev: string) {

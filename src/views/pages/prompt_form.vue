@@ -211,6 +211,7 @@ async function queuePrompt() {
       workflow.value,
     );
     imgGalleryStore.updatePromptId(queueResponse.prompt_id);
+
     appStore.setSuccessMessage({ message: 'Prompt queued' });
   } catch (e) {
     console.error(e);

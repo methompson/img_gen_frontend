@@ -4,6 +4,7 @@
     :items="allImageNodes"
     v-model="filteredNodes"
     multiple
+    hide-details
   />
 </template>
 
